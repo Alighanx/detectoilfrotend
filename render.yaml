@@ -1,0 +1,19 @@
+# render.yaml — Configuración automática para Render.com
+
+services:
+  # 1. Backend (API Python - Flask)
+  - type: web
+    name: detectoil-backend
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  - type: static
+    name: detectoil-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishDir: dist

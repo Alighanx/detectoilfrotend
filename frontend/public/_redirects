@@ -1,0 +1,5 @@
+# _redirects
+# Este archivo es CLAVE para que React Router funcione en producción.
+# Sin esto, al refrescar una página (ej: /historial) Render daría error 404.
+# Redirige todas las rutas desconocidas al index.html para que React las maneje.
+/*    /index.html    200

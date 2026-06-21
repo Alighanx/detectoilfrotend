@@ -123,7 +123,7 @@ export default function Historial() {
                   <th>Fiabilidad IA</th>
                   <th>Nivel Severidad</th>
                   <th>Operador</th>
-                  <th style={{ textAlign: 'center' }}>Ficha</th>
+                  <th style={{ textAlign: 'center', width: '165px', minWidth: '165px' }}>Ficha / Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -141,60 +141,70 @@ export default function Historial() {
                         </span>
                       </td>
                       <td style={{ fontWeight: 600, color: '#e2e8f0' }}>@{d.usuario}</td>
-                      <td style={{ textAlign: 'center' }}>
-                        <button 
-                          className="btn-principal btn-sm" 
-                          onClick={() => setSelectedRecord(d)}
-                          style={{
-                            background: 'rgba(6, 182, 212, 0.15)',
-                            color: 'var(--color-acento)',
-                            border: '1px solid rgba(6, 182, 212, 0.25)',
-                            boxShadow: 'none'
-                          }}
-                          onMouseEnter={e => {
-                            e.currentTarget.style.background = 'var(--color-acento)'
-                            e.currentTarget.style.color = '#fff'
-                          }}
-                          onMouseLeave={e => {
-                            e.currentTarget.style.background = 'rgba(6, 182, 212, 0.15)'
-                            e.currentTarget.style.color = 'var(--color-acento)'
-                          }}
-                        >
-                          Ver Reporte
-                        </button>
-                        {rol === 'admin' && (
-                          <button
-                            className="btn-principal btn-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEliminarHistorial(d.id);
-                            }}
+                      <td style={{ textAlign: 'center', width: '165px', minWidth: '165px' }}>
+                        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center', flexWrap: 'nowrap' }}>
+                          <button 
+                            className="btn-principal btn-sm" 
+                            onClick={() => setSelectedRecord(d)}
                             style={{
-                              background: 'rgba(239, 68, 68, 0.15)',
-                              color: 'var(--color-peligro)',
-                              border: '1px solid rgba(239, 68, 68, 0.25)',
-                              marginLeft: 8,
-                              boxShadow: 'none'
+                              background: 'rgba(6, 182, 212, 0.15)',
+                              color: 'var(--color-acento)',
+                              border: '1px solid rgba(6, 182, 212, 0.25)',
+                              boxShadow: 'none',
+                              whiteSpace: 'nowrap',
+                              flexShrink: 0
                             }}
                             onMouseEnter={e => {
-                              e.currentTarget.style.background = 'var(--color-peligro)'
+                              e.currentTarget.style.background = 'var(--color-acento)'
                               e.currentTarget.style.color = '#fff'
                             }}
                             onMouseLeave={e => {
-                              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)'
-                              e.currentTarget.style.color = 'var(--color-peligro)'
+                              e.currentTarget.style.background = 'rgba(6, 182, 212, 0.15)'
+                              e.currentTarget.style.color = 'var(--color-acento)'
                             }}
-                            title="Eliminar esta detección de la base de datos"
                           >
-                            🗑️
+                            Ver Reporte
                           </button>
-                        )}
+                          {rol === 'admin' && (
+                            <button
+                              className="btn-principal btn-sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEliminarHistorial(d.id);
+                              }}
+                              style={{
+                                background: 'rgba(239, 68, 68, 0.15)',
+                                color: 'var(--color-peligro)',
+                                border: '1px solid rgba(239, 68, 68, 0.25)',
+                                boxShadow: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 30,
+                                height: 30,
+                                padding: 0,
+                                flexShrink: 0
+                              }}
+                              onMouseEnter={e => {
+                                e.currentTarget.style.background = 'var(--color-peligro)'
+                                e.currentTarget.style.color = '#fff'
+                              }}
+                              onMouseLeave={e => {
+                                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)'
+                                e.currentTarget.style.color = 'var(--color-peligro)'
+                              }}
+                              title="Eliminar esta detección de la base de datos"
+                            >
+                              🗑️
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" style={{ textAlign: 'center', color: 'var(--color-texto-muted)', padding: 36 }}>
+                    <td colSpan="8" style={{ textAlign: 'center', color: 'var(--color-texto-muted)', padding: 36 }}>
                       No se encontraron registros de telemetría coincidentes.
                     </td>
                   </tr>

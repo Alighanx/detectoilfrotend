@@ -404,10 +404,10 @@ export default function NuevaDeteccion() {
                   </svg>
                   
                   <div style={{ position: 'absolute', textAlign: 'center' }}>
-                    <span style={{ fontSize: '1.45rem', fontWeight: 800, color: '#fff', display: 'block', fontFamily: 'Outfit, sans-serif' }}>
+                    <span style={{ fontSize: '1.15rem', fontWeight: 800, color: '#fff', display: 'block', fontFamily: 'Outfit, sans-serif', letterSpacing: '-0.02em' }}>
                       {resultado.confianza}%
                     </span>
-                    <span style={{ fontSize: '0.62rem', color: 'var(--color-texto-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.6rem', color: 'var(--color-texto-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
                       Confianza IA
                     </span>
                   </div>

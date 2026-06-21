@@ -472,15 +472,19 @@ def get_stats():
     
     try:
         with conn.cursor() as cur:
-            # 1. Total derrames detectados (nivel alto o medio)
+            # 1. Total análisis realizados (todos los registros en el historial)
+            cur.execute("SELECT COUNT(*) FROM historial")
+            total_analisis = cur.fetchone()[0]
+
+            # 2. Total derrames detectados (nivel alto o medio)
             cur.execute("SELECT COUNT(*) FROM historial WHERE nivel IN ('alto', 'medio')")
             derrames = cur.fetchone()[0]
             
-            # 2. Alertas críticas (donde nivel = 'alto')
+            # 3. Alertas críticas (donde nivel = 'alto')
             cur.execute("SELECT COUNT(*) FROM historial WHERE nivel = 'alto'")
             alertas_criticas = cur.fetchone()[0]
             
-            # 3. Suma de área afectada en km²
+            # 4. Suma de área afectada en km²
             # Extraemos la parte numérica (ej: '3.2 km²' -> 3.2)
             cur.execute("""
                 SELECT SUM(
@@ -497,7 +501,7 @@ def get_stats():
             area_sum = cur.fetchone()[0]
             area_sum = round(float(area_sum), 1) if area_sum is not None else 0.0
             
-            # 4. Confianza promedio de la IA (ej: '91.23%' -> 91.23)
+            # 5. Confianza promedio de la IA (ej: '91.23%' -> 91.23)
             cur.execute("""
                 SELECT AVG(
                     CAST(
@@ -515,6 +519,7 @@ def get_stats():
             
             return jsonify({
                 "success": True,
+                "total_analisis": total_analisis,
                 "derrames": derrames,
                 "alertas_criticas": alertas_criticas,
                 "area_afectada": area_sum,
@@ -523,6 +528,7 @@ def get_stats():
     except Exception as e:
         return jsonify({
             "success": True,
+            "total_analisis": 0,
             "derrames": 0,
             "alertas_criticas": 0,
             "area_afectada": 0.0,

@@ -26,6 +26,7 @@ function Contador({ meta, sufijo = '' }) {
 
 export default function Inicio() {
   const [stats, setStats] = useState({
+    total_analisis: 0,
     derrames: 0,
     alertas_criticas: 0,
     area_afectada: 0,
@@ -54,6 +55,7 @@ export default function Inicio() {
 
         if (dataStats.success) {
           setStats({
+            total_analisis: dataStats.total_analisis,
             derrames: dataStats.derrames,
             alertas_criticas: dataStats.alertas_criticas,
             area_afectada: dataStats.area_afectada,
@@ -95,7 +97,7 @@ export default function Inicio() {
         </svg>
       ), 
       color: 'verde', 
-      meta: stats.derrames, 
+      meta: stats.total_analisis, 
       label: 'Análisis Totales' 
     },
     { 

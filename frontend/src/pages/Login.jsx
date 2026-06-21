@@ -4,19 +4,20 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-// Nota: Las credenciales ahora se validan en el backend
-
 export default function Login() {
-  // useState: variables que React actualiza automáticamente en la pantalla
   const [usuario, setUsuario] = useState('')
-  const [clave,   setClave]   = useState('')
-  const [error,   setError]   = useState('')
+  const [clave, setClave] = useState('')
+  const [verClave, setVerClave] = useState(false)
+  const [error, setError] = useState('')
+  const [ingresando, setIngresando] = useState(false)
 
-  const navigate = useNavigate()  // Para navegar a otra página
+  const navigate = useNavigate()
 
   // Se ejecuta cuando el usuario presiona "Ingresar"
   async function handleSubmit(e) {
-    e.preventDefault()  // Evita que la página se recargue
+    e.preventDefault()
+    setIngresando(true)
+    setError('')
 
     try {
       const apiBase = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
@@ -40,24 +41,42 @@ export default function Login() {
       }
     } catch (err) {
       console.error(err);
-      setError('Error al conectar con el servidor.');
+      setError('Error al conectar con el servidor de autenticación.');
+    } finally {
+      setIngresando(false)
     }
   }
 
   return (
-    <div className="login-wrapper">
-      <div className="login-card">
+    <div className="login-wrapper" style={{ position: 'relative', overflow: 'hidden' }}>
+      
+      {/* Círculo luminoso de fondo */}
+      <div style={{
+        position: 'absolute',
+        width: '400px',
+        height: '400px',
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(13,110,63,0.2) 0%, transparent 70%)',
+        top: '-10%',
+        left: '-10%',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      <div className="login-card" style={{ zIndex: 1, border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(7, 18, 23, 0.85)' }}>
         <div className="login-brand">
-          <div className="login-brand-mark">DO</div>
+          <div className="login-brand-mark" style={{ background: 'linear-gradient(135deg, #0d6e3f, #22c7ff)' }}>DO</div>
           <div>
-            <div className="login-title">DetectOil IA</div>
+            <div className="login-title" style={{ background: 'linear-gradient(120deg, #fff, #9bb0c8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              DetectOil IA
+            </div>
             <div className="login-subtitle">
-              Plataforma de monitoreo inteligente para derrames de petróleo.
+              Plataforma inteligente de monitoreo satelital de hidrocarburos.
             </div>
           </div>
         </div>
 
-        {error && <div className="alerta-error">❌ {error}</div>}
+        {error && <div className="alerta-error" style={{ borderRadius: 16 }}>❌ {error}</div>}
 
         <form onSubmit={handleSubmit}>
           <label className="form-label">Usuario</label>
@@ -67,27 +86,73 @@ export default function Login() {
             placeholder="Ingresa tu usuario"
             value={usuario}
             onChange={e => setUsuario(e.target.value)}
+            style={{ borderRadius: 14 }}
             required
           />
 
           <label className="form-label">Contraseña</label>
-          <input
-            type="password"
-            className="form-field"
-            placeholder="Ingresa tu contraseña"
-            value={clave}
-            onChange={e => setClave(e.target.value)}
-            required
-          />
+          <div style={{ position: 'relative', marginBottom: 18 }}>
+            <input
+              type={verClave ? 'text' : 'password'}
+              className="form-field"
+              placeholder="Ingresa tu contraseña"
+              value={clave}
+              onChange={e => setClave(e.target.value)}
+              style={{ paddingRight: '45px', marginBottom: 0, borderRadius: 14 }}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setVerClave(!verClave)}
+              style={{
+                position: 'absolute',
+                right: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'transparent',
+                border: 'none',
+                color: 'rgba(255,255,255,0.45)',
+                cursor: 'pointer',
+                fontSize: '1.1rem',
+                padding: '5px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                outline: 'none'
+              }}
+            >
+              {verClave ? '👁️' : '🙈'}
+            </button>
+          </div>
 
-          <button type="submit" className="btn-ingresar">
-            🔐 Ingresar al sistema
+          <button 
+            type="submit" 
+            className="btn-ingresar" 
+            style={{ borderRadius: 14, background: 'linear-gradient(135deg, #0d6e3f, #1a9e5f)', boxShadow: '0 12px 30px rgba(13,110,63,0.22)' }}
+            disabled={ingresando}
+          >
+            {ingresando ? '⏳ Verificando credenciales...' : '🔐 Ingresar al Sistema'}
           </button>
         </form>
 
-        <p className="login-note">
-          🧪 Demo: <strong>admin</strong> / <strong>1234</strong>
-        </p>
+        {/* Caja de ayuda flotante */}
+        <div className="card-custom" style={{
+          marginTop: 24,
+          padding: '14px 16px',
+          background: 'rgba(111,141,255,0.05)',
+          border: '1px solid rgba(111,141,255,0.12)',
+          borderRadius: 16,
+          textAlign: 'center',
+          marginBottom: 0,
+          boxShadow: 'none'
+        }}>
+          <span style={{ fontSize: '0.82rem', color: '#9bb0c8', display: 'block' }}>
+            🧪 Acceso Demo de Prueba:
+          </span>
+          <span style={{ fontSize: '0.9rem', color: '#fff', fontWeight: 600, marginTop: 4, display: 'inline-block' }}>
+            Usuario: <code style={{ color: '#22c7ff', background: 'rgba(34,199,255,0.1)', padding: '2px 6px', borderRadius: 4 }}>admin</code> | Clave: <code style={{ color: '#22c7ff', background: 'rgba(34,199,255,0.1)', padding: '2px 6px', borderRadius: 4 }}>1234</code>
+          </span>
+        </div>
       </div>
     </div>
   )

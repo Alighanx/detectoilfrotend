@@ -15,6 +15,9 @@ import numpy as np
 import json
 import re
 from pathlib import Path
+import psycopg2
+from urllib.parse import urlparse, parse_qs
+import random
 
 # Creamos la aplicación Flask
 app = Flask(__name__)
@@ -23,11 +26,83 @@ app = Flask(__name__)
 # Permitir orígenes específicos (vuelve a configurar con tus dominios reales)
 ALLOWED_ORIGINS = [
     "https://detectoilfrotend.onrender.com",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
     re.compile(r"^https://.*\.vercel\.app$"),
 ]
 
 # Para pruebas rápidas puedes usar '*' pero en producción restringe a tus dominios.
 CORS(app, resources={r"/api/*": {"origins": ALLOWED_ORIGINS}}, supports_credentials=True)
+
+# ============================================================
+# CONFIGURACIÓN DE BASE DE DATOS POSTGRESQL
+# ============================================================
+
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://postgres:LTVkJ42YAvaGLCK3zreh@158.220.114.139:5566/historialdb?schema=public"
+)
+
+def get_db_connection():
+    try:
+        parsed = urlparse(DATABASE_URL)
+        queries = parse_qs(parsed.query)
+        schema = queries.get('schema', ['public'])[0]
+        
+        # Limpiamos el parámetro 'schema' para evitar que falle libpq
+        clean_query = ""
+        query_params = []
+        for k, v in queries.items():
+            if k != 'schema':
+                for val in v:
+                    query_params.append(f"{k}={val}")
+        if query_params:
+            clean_query = "?" + "&".join(query_params)
+            
+        clean_url = parsed._replace(query=clean_query.lstrip('?')).geturl()
+        
+        conn = psycopg2.connect(clean_url)
+        
+        if schema:
+            with conn.cursor() as cur:
+                if re.match(r'^[a-zA-Z0-9_]+$', schema):
+                    cur.execute(f'SET search_path TO "{schema}";')
+                else:
+                    cur.execute('SET search_path TO "public";')
+        return conn
+    except Exception as e:
+        print(f"Error de conexión a la base de datos: {e}")
+        return None
+
+def init_db():
+    conn = get_db_connection()
+    if conn:
+        try:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS historial (
+                        id SERIAL PRIMARY KEY,
+                        fecha VARCHAR(100),
+                        lugar VARCHAR(255),
+                        area VARCHAR(50),
+                        confianza VARCHAR(50),
+                        nivel VARCHAR(50),
+                        resultado VARCHAR(100),
+                        probabilidad_derrame NUMERIC,
+                        probabilidad_sin_derrame NUMERIC,
+                        recomendacion TEXT,
+                        fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                """)
+                conn.commit()
+            print("Base de datos inicializada correctamente (tabla historial creada o ya existente)")
+        except Exception as e:
+            print(f"Error al inicializar la base de datos: {e}")
+        finally:
+            conn.close()
+
+# Inicializamos la base de datos al arrancar
+init_db()
 
 # ============================================================
 # CREDENCIALES DE PRUEBA
@@ -151,6 +226,40 @@ def predict():
             nivel_alerta = "Bajo"
             recomendacion = "No se identifican indicios relevantes de derrame. Se recomienda mantener el monitoreo preventivo."
 
+        # Guardar en base de datos de historial
+        conn = get_db_connection()
+        if conn:
+            try:
+                with conn.cursor() as cur:
+                    # Si es derrame, generamos un área simulada realista (e.g. 1.0 a 6.0 km²), de lo contrario 0 km²
+                    if clase_tecnica == 'oil':
+                        area_val = f"{round(random.uniform(1.0, 6.0), 1)} km²"
+                    else:
+                        area_val = "0 km²"
+                    
+                    confianza_str = f"{round(confianza * 100, 2)}%"
+                    nivel_val = nivel_alerta.lower()
+                    
+                    cur.execute("""
+                        INSERT INTO historial (fecha, lugar, area, confianza, nivel, resultado, probabilidad_derrame, probabilidad_sin_derrame, recomendacion)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """, (
+                        fecha if fecha and fecha != "No especificada" else "No especificada",
+                        zona if zona and zona != "No especificada" else "No especificada",
+                        area_val,
+                        confianza_str,
+                        nivel_val,
+                        resultado,
+                        round(probabilidad_derrame * 100, 2),
+                        round(probabilidad_sin_derrame * 100, 2),
+                        recomendacion
+                    ))
+                    conn.commit()
+            except Exception as e:
+                print(f"Error al guardar historial en BD: {e}")
+            finally:
+                conn.close()
+
         return jsonify({
             "success": True,
             "resultado": resultado,
@@ -169,6 +278,56 @@ def predict():
             "success": False,
             "message": f"Error al procesar la imagen: {str(e)}"
         }), 500
+
+
+# ============================================================
+# RUTA DE HISTORIAL
+# ============================================================
+
+@app.route("/api/historial", methods=["GET"])
+def get_historial():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos de historial."
+        }), 500
+    
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT id, fecha, lugar, area, confianza, nivel, resultado, probabilidad_derrame, probabilidad_sin_derrame, recomendacion 
+                FROM historial 
+                ORDER BY id DESC
+            """)
+            rows = cur.fetchall()
+            
+            historial_list = []
+            for row in rows:
+                historial_list.append({
+                    "id": f"#{row[0]:03d}" if isinstance(row[0], int) else f"#{row[0]}",
+                    "fecha": row[1],
+                    "lugar": row[2],
+                    "area": row[3],
+                    "confianza": row[4],
+                    "nivel": row[5],
+                    "resultado": row[6],
+                    "probabilidad_derrame": float(row[7]) if row[7] is not None else 0.0,
+                    "probabilidad_sin_derrame": float(row[8]) if row[8] is not None else 0.0,
+                    "recomendacion": row[9]
+                })
+            
+            return jsonify({
+                "success": True,
+                "data": historial_list
+            })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al consultar el historial: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
 
 
 # ============================================================

@@ -1,12 +1,21 @@
 import { useState, useRef } from 'react'
 
+const getTodayDateString = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
 export default function NuevaDeteccion() {
   const [archivo, setArchivo] = useState(null)
   const [preview, setPreview] = useState(null)
   const [analizando, setAnalizando] = useState(false)
   const [resultado, setResultado] = useState(null)
   const [progreso, setProgreso] = useState(0)
-  const [fecha, setFecha] = useState('')
+  const [fecha, setFecha] = useState(getTodayDateString())
+  const [dateMode, setDateMode] = useState('hoy') // 'hoy', 'orbit', 'manual'
   const [zona, setZona] = useState('')
   const [error, setError] = useState('')
   const [isDragging, setIsDragging] = useState(false)
@@ -201,15 +210,101 @@ export default function NuevaDeteccion() {
 
             <div style={{ marginTop: 'auto', paddingTop: 20 }}>
               <div className="row g-2 mb-3">
-                <div className="col-6">
+                <div className="col-6" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <label className="form-label" style={{ fontSize: '0.74rem' }}>Fecha de Captura</label>
-                  <input
-                    type="date"
-                    className="input-custom"
-                    value={fecha}
-                    onChange={e => setFecha(e.target.value)}
-                    style={{ marginBottom: 0 }}
-                  />
+                  <div style={{ display: 'flex', gap: 4, background: 'rgba(255,255,255,0.03)', padding: 3, borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDateMode('hoy');
+                        setFecha(getTodayDateString());
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: '6px 4px',
+                        border: 'none',
+                        borderRadius: 6,
+                        background: dateMode === 'hoy' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
+                        color: dateMode === 'hoy' ? 'var(--color-acento)' : 'var(--color-texto-muted)',
+                        fontSize: '0.7rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        border: dateMode === 'hoy' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid transparent'
+                      }}
+                    >
+                      Hoy
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDateMode('orbit');
+                        const prev = new Date();
+                        prev.setDate(prev.getDate() - 5);
+                        const yyyy = prev.getFullYear();
+                        const mm = String(prev.getMonth() + 1).padStart(2, '0');
+                        const dd = String(prev.getDate()).padStart(2, '0');
+                        setFecha(`${yyyy}-${mm}-${dd}`);
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: '6px 4px',
+                        border: 'none',
+                        borderRadius: 6,
+                        background: dateMode === 'orbit' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
+                        color: dateMode === 'orbit' ? 'var(--color-acento)' : 'var(--color-texto-muted)',
+                        fontSize: '0.7rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        border: dateMode === 'orbit' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid transparent'
+                      }}
+                    >
+                      Órbita
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDateMode('manual')}
+                      style={{
+                        flex: 1,
+                        padding: '6px 4px',
+                        border: 'none',
+                        borderRadius: 6,
+                        background: dateMode === 'manual' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
+                        color: dateMode === 'manual' ? 'var(--color-acento)' : 'var(--color-texto-muted)',
+                        fontSize: '0.7rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        border: dateMode === 'manual' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid transparent'
+                      }}
+                    >
+                      Manual
+                    </button>
+                  </div>
+                  {dateMode === 'manual' ? (
+                    <input
+                      type="date"
+                      className="input-custom"
+                      value={fecha}
+                      onChange={e => setFecha(e.target.value)}
+                      style={{ padding: '8px 10px', fontSize: '0.8rem', borderRadius: 8, marginBottom: 0, marginTop: 4 }}
+                    />
+                  ) : (
+                    <div style={{
+                      padding: '8px 10px',
+                      borderRadius: 8,
+                      background: 'rgba(255,255,255,0.01)',
+                      border: '1px solid rgba(255,255,255,0.03)',
+                      fontSize: '0.76rem',
+                      color: 'var(--color-acento)',
+                      fontWeight: 700,
+                      textAlign: 'center',
+                      marginTop: 4
+                    }}>
+                      🕒 {fecha}
+                    </div>
+                  )}
                 </div>
                 <div className="col-6">
                   <label className="form-label" style={{ fontSize: '0.74rem' }}>Zona Geográfica</label>

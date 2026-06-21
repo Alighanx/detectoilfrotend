@@ -18,6 +18,7 @@ from pathlib import Path
 import psycopg2
 from urllib.parse import urlparse, parse_qs
 import random
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Creamos la aplicación Flask
 app = Flask(__name__)
@@ -79,6 +80,7 @@ def init_db():
     if conn:
         try:
             with conn.cursor() as cur:
+                # Crear tabla historial
                 cur.execute("""
                     CREATE TABLE IF NOT EXISTS historial (
                         id SERIAL PRIMARY KEY,
@@ -94,8 +96,26 @@ def init_db():
                         fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 """)
+                # Crear tabla usuarios
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS usuarios (
+                        id SERIAL PRIMARY KEY,
+                        usuario VARCHAR(150) UNIQUE NOT NULL,
+                        contrasena VARCHAR(256) NOT NULL,
+                        nombre VARCHAR(150),
+                        fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                """)
+                # Semilla de usuario admin por defecto
+                cur.execute("SELECT COUNT(*) FROM usuarios")
+                if cur.fetchone()[0] == 0:
+                    hashed_pw = generate_password_hash("1234")
+                    cur.execute("""
+                        INSERT INTO usuarios (usuario, contrasena, nombre)
+                        VALUES (%s, %s, %s)
+                    """, ("admin", hashed_pw, "Administrador"))
                 conn.commit()
-            print("Base de datos inicializada correctamente (tabla historial creada o ya existente)")
+            print("Base de datos inicializada correctamente (tablas historial y usuarios listas)")
         except Exception as e:
             print(f"Error al inicializar la base de datos: {e}")
         finally:
@@ -103,13 +123,6 @@ def init_db():
 
 # Inicializamos la base de datos al arrancar
 init_db()
-
-# ============================================================
-# CREDENCIALES DE PRUEBA
-# ============================================================
-
-USUARIO_VALIDO = "admin"
-CLAVE_VALIDA = "1234"
 
 # ============================================================
 # CARGA DEL MODELO ENTRENADO (Lazy Loading)
@@ -145,7 +158,7 @@ def home():
 
 
 # ============================================================
-# RUTA LOGIN
+# RUTA LOGIN (Autenticación con Base de Datos)
 # ============================================================
 
 @app.route("/api/login", methods=["POST"])
@@ -155,16 +168,182 @@ def login():
     usuario = data.get("usuario")
     clave = data.get("clave")
 
-    if usuario == USUARIO_VALIDO and clave == CLAVE_VALIDA:
+    if not usuario or not clave:
         return jsonify({
-            "success": True,
-            "usuario": usuario
-        })
+            "success": False,
+            "message": "Falta ingresar el usuario o la contraseña."
+        }), 400
 
-    return jsonify({
-        "success": False,
-        "message": "Usuario o contraseña incorrectos."
-    })
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo establecer conexión con la base de datos."
+        }), 500
+
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT contrasena, nombre FROM usuarios WHERE usuario = %s", (usuario,))
+            row = cur.fetchone()
+            if row:
+                contrasena_hash, nombre = row
+                if check_password_hash(contrasena_hash, clave):
+                    return jsonify({
+                        "success": True,
+                        "usuario": usuario,
+                        "nombre": nombre
+                    })
+        return jsonify({
+            "success": False,
+            "message": "Usuario o contraseña incorrectos."
+        })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al procesar la autenticación: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
+
+
+# ============================================================
+# ENDPOINTS PARA GESTIÓN DE USUARIOS
+# ============================================================
+
+@app.route("/api/usuarios", methods=["GET"])
+def get_usuarios():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos."
+        }), 500
+    
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, usuario, nombre, fecha_registro FROM usuarios ORDER BY id ASC")
+            rows = cur.fetchall()
+            
+            usuarios_list = []
+            for row in rows:
+                usuarios_list.append({
+                    "id": row[0],
+                    "usuario": row[1],
+                    "nombre": row[2] or "Sin nombre",
+                    "fecha_registro": row[3].strftime("%Y-%m-%d %H:%M:%S") if row[3] else "No registrada"
+                })
+            
+            return jsonify({
+                "success": True,
+                "data": usuarios_list
+            })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al consultar usuarios: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/usuarios", methods=["POST"])
+def create_usuario():
+    data = request.get_json()
+    usuario = data.get("usuario")
+    contrasena = data.get("contrasena")
+    nombre = data.get("nombre", "")
+
+    if not usuario or not contrasena:
+        return jsonify({
+            "success": False,
+            "message": "El nombre de usuario y la contraseña son requeridos."
+        }), 400
+
+    # Validar formato simple del usuario (sólo alfanumérico y guiones)
+    if not re.match(r'^[a-zA-Z0-9_-]+$', usuario):
+        return jsonify({
+            "success": False,
+            "message": "El nombre de usuario sólo puede contener letras, números, guiones y guiones bajos."
+        }), 400
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos."
+        }), 500
+
+    try:
+        hashed_pw = generate_password_hash(contrasena)
+        with conn.cursor() as cur:
+            # Verificar si ya existe
+            cur.execute("SELECT COUNT(*) FROM usuarios WHERE usuario = %s", (usuario,))
+            if cur.fetchone()[0] > 0:
+                return jsonify({
+                    "success": False,
+                    "message": f"El nombre de usuario '{usuario}' ya está registrado."
+                }), 400
+
+            cur.execute("""
+                INSERT INTO usuarios (usuario, contrasena, nombre)
+                VALUES (%s, %s, %s)
+            """, (usuario, hashed_pw, nombre))
+            conn.commit()
+            return jsonify({
+                "success": True,
+                "message": f"Usuario '{usuario}' registrado correctamente."
+            })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al registrar usuario: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/usuarios/<int:user_id>", methods=["DELETE"])
+def delete_usuario(user_id):
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos."
+        }), 500
+
+    try:
+        with conn.cursor() as cur:
+            # Obtener el nombre de usuario
+            cur.execute("SELECT usuario FROM usuarios WHERE id = %s", (user_id,))
+            row = cur.fetchone()
+            if not row:
+                return jsonify({
+                    "success": False,
+                    "message": "Usuario no encontrado."
+                }), 404
+            
+            usuario = row[0]
+            
+            # Impedir eliminar el administrador principal
+            if usuario == "admin":
+                return jsonify({
+                    "success": False,
+                    "message": "El usuario administrador principal 'admin' no puede ser eliminado del sistema."
+                }), 400
+
+            cur.execute("DELETE FROM usuarios WHERE id = %s", (user_id,))
+            conn.commit()
+            return jsonify({
+                "success": True,
+                "message": f"Usuario '{usuario}' eliminado correctamente."
+            })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al eliminar usuario: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
 
 # ============================================================
 # RUTA DE PREDICCIÓN

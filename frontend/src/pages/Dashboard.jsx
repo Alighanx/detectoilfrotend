@@ -9,12 +9,14 @@ import Inicio from './sections/Inicio'
 import NuevaDeteccion from './sections/NuevaDeteccion'
 import Historial from './sections/Historial'
 import Informacion from './sections/Informacion'
+import Usuarios from './sections/Usuarios'
 
 // Mapa: nombre de sección → componente React correspondiente
 const SECCIONES = {
   inicio:          <Inicio />,
   nueva_deteccion: <NuevaDeteccion />,
   historial:       <Historial />,
+  usuarios:        <Usuarios />,
   informacion:     <Informacion />,
 }
 

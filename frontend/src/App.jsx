@@ -25,6 +25,7 @@ export default function App() {
       <Route path="/inicio"           element={<ProtectedRoute><Dashboard seccion="inicio"          /></ProtectedRoute>} />
       <Route path="/nueva-deteccion"  element={<ProtectedRoute><Dashboard seccion="nueva_deteccion" /></ProtectedRoute>} />
       <Route path="/historial"        element={<ProtectedRoute><Dashboard seccion="historial"        /></ProtectedRoute>} />
+      <Route path="/usuarios"         element={<ProtectedRoute><Dashboard seccion="usuarios"         /></ProtectedRoute>} />
       <Route path="/informacion"      element={<ProtectedRoute><Dashboard seccion="informacion"      /></ProtectedRoute>} />
 
       {/* Cualquier ruta desconocida redirige al inicio */}

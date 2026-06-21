@@ -9,6 +9,7 @@ const MENU_ITEMS = [
   { emoji: '🏠', label: 'Inicio',          ruta: '/inicio' },
   { emoji: '🛢️', label: 'Nueva Detección', ruta: '/nueva-deteccion' },
   { emoji: '📊', label: 'Historial',        ruta: '/historial' },
+  { emoji: '👥', label: 'Usuarios',         ruta: '/usuarios' },
   { emoji: '📚', label: 'Información',      ruta: '/informacion' },
 ]
 

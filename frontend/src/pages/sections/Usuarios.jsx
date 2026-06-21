@@ -12,7 +12,57 @@ export default function Usuarios() {
   const [contrasena, setContrasena] = useState('')
   const [registrando, setRegistrando] = useState(false)
 
+  // Campos para restablecer contraseña
+  const [resetUser, setResetUser] = useState('')
+  const [resetClave, setResetClave] = useState('')
+  const [reseteando, setReseteando] = useState(false)
+
   const usuarioLogueado = localStorage.getItem('usuario') || ''
+
+  async function handleResetPassword(e) {
+    e.preventDefault()
+    setReseteando(true)
+    setError('')
+    setSuccess('')
+
+    if (!resetUser || !resetClave.trim()) {
+      setError('Por favor, selecciona un usuario e ingresa la nueva contraseña.')
+      setReseteando(false)
+      return
+    }
+
+    if (resetClave.length < 4) {
+      setError('La nueva contraseña debe tener al menos 4 caracteres.')
+      setReseteando(false)
+      return
+    }
+
+    try {
+      const apiBase = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
+      const API_URL = apiBase ? `${apiBase}/api` : '/api';
+
+      const response = await fetch(`${API_URL}/usuarios/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario: resetUser, clave_nueva: resetClave })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setSuccess(data.message || `Contraseña de @${resetUser} actualizada con éxito.`)
+        setResetUser('')
+        setResetClave('')
+      } else {
+        setError(data.message || 'No se pudo restablecer la contraseña.')
+      }
+    } catch (err) {
+      console.error(err)
+      setError('Error al conectar con el servidor para restablecer contraseña.')
+    } finally {
+      setReseteando(false)
+    }
+  }
 
   async function cargarUsuarios() {
     try {
@@ -229,8 +279,8 @@ export default function Usuarios() {
         </div>
 
         {/* Registro de Cuentas */}
-        <div className="col-md-5">
-          <div className="card-custom">
+        <div className="col-md-5" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div className="card-custom" style={{ marginBottom: 0 }}>
             <h5 style={{ color: '#fff', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
               ➕ Crear Credencial de Red
             </h5>
@@ -282,6 +332,54 @@ export default function Usuarios() {
                 disabled={registrando}
               >
                 {registrando ? '⏳ Registrando credencial...' : '➕ Habilitar Operador'}
+              </button>
+            </form>
+          </div>
+
+          {/* Restablecer Contraseña (Admin) */}
+          <div className="card-custom">
+            <h5 style={{ color: '#fff', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
+              🔑 Restablecer Contraseña
+            </h5>
+            <form onSubmit={handleResetPassword} style={{ display: 'grid', gap: 16 }}>
+              <div>
+                <label className="form-label" style={{ fontSize: '0.74rem' }}>Seleccionar Operador</label>
+                <select
+                  className="input-custom"
+                  value={resetUser}
+                  onChange={e => setResetUser(e.target.value)}
+                  style={{ marginBottom: 0, background: 'rgba(9, 18, 33, 0.95)', color: '#fff', outline: 'none' }}
+                  required
+                >
+                  <option value="">Selecciona un usuario...</option>
+                  {usuarios.map(u => (
+                    <option key={u.id} value={u.usuario}>
+                      {u.nombre} (@{u.usuario})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="form-label" style={{ fontSize: '0.74rem' }}>Nueva Contraseña de Acceso</label>
+                <input
+                  type="password"
+                  className="input-custom"
+                  placeholder="Escribe la nueva contraseña"
+                  value={resetClave}
+                  onChange={e => setResetClave(e.target.value)}
+                  style={{ marginBottom: 0 }}
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-principal"
+                style={{ width: '100%', marginTop: 8, justifyContent: 'center', background: 'linear-gradient(135deg, var(--color-acento), #0891b2)' }}
+                disabled={reseteando}
+              >
+                {reseteando ? '⏳ Actualizando clave...' : '💾 Restablecer Clave'}
               </button>
             </form>
           </div>

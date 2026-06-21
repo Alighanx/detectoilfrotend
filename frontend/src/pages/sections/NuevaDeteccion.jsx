@@ -76,6 +76,7 @@ export default function NuevaDeteccion() {
       formData.append('imagen', archivo)
       formData.append('fecha', fecha)
       formData.append('zona', zona)
+      formData.append('usuario', localStorage.getItem('usuario') || 'admin')
 
       setProgreso(50)
 

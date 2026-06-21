@@ -7,6 +7,38 @@ export default function Historial() {
   const [busqueda, setBusqueda] = useState('')
   const [selectedRecord, setSelectedRecord] = useState(null)
 
+  const rol = localStorage.getItem('rol') || 'usuario'
+
+  async function handleEliminarHistorial(id) {
+    const numericId = typeof id === 'string' ? parseInt(id.replace('#', ''), 10) : id;
+    
+    if (!window.confirm(`¿Estás seguro de que deseas eliminar permanentemente el registro #${numericId}?`)) {
+      return;
+    }
+
+    try {
+      const apiBase = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
+      const API_URL = apiBase ? `${apiBase}/api` : '/api';
+
+      const response = await fetch(`${API_URL}/historial/${numericId}`, {
+        method: 'DELETE'
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert('Registro de detección eliminado con éxito.');
+        setDatos(prev => prev.filter(item => {
+          const itemNumId = typeof item.id === 'string' ? parseInt(item.id.replace('#', ''), 10) : item.id;
+          return itemNumId !== numericId;
+        }));
+      } else {
+        alert(data.message || 'No se pudo eliminar el registro.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error de conexión al eliminar el registro.');
+    }
+  }
+
   useEffect(() => {
     async function cargarHistorial() {
       try {
@@ -90,6 +122,7 @@ export default function Historial() {
                   <th>Área Afectada</th>
                   <th>Fiabilidad IA</th>
                   <th>Nivel Severidad</th>
+                  <th>Operador</th>
                   <th style={{ textAlign: 'center' }}>Ficha</th>
                 </tr>
               </thead>
@@ -107,6 +140,7 @@ export default function Historial() {
                           {d.nivel}
                         </span>
                       </td>
+                      <td style={{ fontWeight: 600, color: '#e2e8f0' }}>@{d.usuario}</td>
                       <td style={{ textAlign: 'center' }}>
                         <button 
                           className="btn-principal btn-sm" 
@@ -128,6 +162,33 @@ export default function Historial() {
                         >
                           Ver Reporte
                         </button>
+                        {rol === 'admin' && (
+                          <button
+                            className="btn-principal btn-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEliminarHistorial(d.id);
+                            }}
+                            style={{
+                              background: 'rgba(239, 68, 68, 0.15)',
+                              color: 'var(--color-peligro)',
+                              border: '1px solid rgba(239, 68, 68, 0.25)',
+                              marginLeft: 8,
+                              boxShadow: 'none'
+                            }}
+                            onMouseEnter={e => {
+                              e.currentTarget.style.background = 'var(--color-peligro)'
+                              e.currentTarget.style.color = '#fff'
+                            }}
+                            onMouseLeave={e => {
+                              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)'
+                              e.currentTarget.style.color = 'var(--color-peligro)'
+                            }}
+                            title="Eliminar esta detección de la base de datos"
+                          >
+                            🗑️
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))
@@ -266,12 +327,18 @@ export default function Historial() {
                 </div>
               </div>
 
-              {/* Severity Category */}
-              <div>
-                <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 6 }}>Nivel de Gravedad Asignado</span>
-                <span className={`badge-estado badge-${selectedRecord.nivel}`}>
-                  {selectedRecord.nivel}
-                </span>
+              {/* Severity Category & Analyst */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div>
+                  <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 6 }}>Nivel de Gravedad Asignado</span>
+                  <span className={`badge-estado badge-${selectedRecord.nivel}`}>
+                    {selectedRecord.nivel}
+                  </span>
+                </div>
+                <div>
+                  <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 6 }}>Analista Registrador</span>
+                  <strong style={{ color: '#fff', fontSize: '0.94rem', display: 'inline-block', marginTop: 4 }}>@{selectedRecord.usuario}</strong>
+                </div>
               </div>
 
               {/* Action recommendation */}

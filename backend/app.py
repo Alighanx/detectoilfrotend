@@ -112,6 +112,12 @@ def init_db():
                     cur.execute("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS rol VARCHAR(50) DEFAULT 'usuario';")
                 except Exception as migration_e:
                     print(f"Migración de rol ignorada o no compatible: {migration_e}")
+
+                # Asegurar columna usuario en historial si la tabla ya existía (migración operador)
+                try:
+                    cur.execute("ALTER TABLE historial ADD COLUMN IF NOT EXISTS usuario VARCHAR(150) DEFAULT 'admin';")
+                except Exception as migration_historial_e:
+                    print(f"Migración de usuario en historial ignorada o no compatible: {migration_historial_e}")
                 
                 # Semilla de usuario admin por defecto
                 cur.execute("SELECT COUNT(*) FROM usuarios")
@@ -413,6 +419,44 @@ def change_password():
         conn.close()
 
 
+@app.route("/api/usuarios/reset-password", methods=["POST"])
+def reset_password():
+    data = request.get_json()
+    usuario = data.get("usuario")
+    clave_nueva = data.get("clave_nueva")
+
+    if not usuario or not clave_nueva:
+        return jsonify({
+            "success": False,
+            "message": "Falta especificar el usuario o la nueva contraseña."
+        }), 400
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos."
+        }), 500
+
+    try:
+        with conn.cursor() as cur:
+            # Actualizar contraseña sin pedir clave actual (función de administrador)
+            new_hashed_pw = generate_password_hash(clave_nueva)
+            cur.execute("UPDATE usuarios SET contrasena = %s WHERE usuario = %s", (new_hashed_pw, usuario))
+            conn.commit()
+            return jsonify({
+                "success": True,
+                "message": f"Contraseña del usuario @{usuario} actualizada exitosamente."
+            })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al restablecer la contraseña: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
+
+
 # ============================================================
 # ENDPOINTS PARA MÉTRICAS Y ACTIVIDAD (Dashboard Inicio)
 # ============================================================
@@ -550,6 +594,7 @@ def predict():
     # Datos opcionales enviados desde el frontend
     fecha = request.form.get("fecha", "No especificada")
     zona = request.form.get("zona", "No especificada")
+    usuario = request.form.get("usuario", "admin")
 
     try:
         # Abrimos la imagen, la convertimos a escala de grises y la redimensionamos
@@ -605,8 +650,8 @@ def predict():
                     nivel_val = nivel_alerta.lower()
                     
                     cur.execute("""
-                        INSERT INTO historial (fecha, lugar, area, confianza, nivel, resultado, probabilidad_derrame, probabilidad_sin_derrame, recomendacion)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        INSERT INTO historial (fecha, lugar, area, confianza, nivel, resultado, probabilidad_derrame, probabilidad_sin_derrame, recomendacion, usuario)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """, (
                         fecha if fecha and fecha != "No especificada" else "No especificada",
                         zona if zona and zona != "No especificada" else "No especificada",
@@ -616,7 +661,8 @@ def predict():
                         resultado,
                         round(probabilidad_derrame * 100, 2),
                         round(probabilidad_sin_derrame * 100, 2),
-                        recomendacion
+                        recomendacion,
+                        usuario
                     ))
                     conn.commit()
             except Exception as e:
@@ -660,7 +706,7 @@ def get_historial():
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                SELECT id, fecha, lugar, area, confianza, nivel, resultado, probabilidad_derrame, probabilidad_sin_derrame, recomendacion 
+                SELECT id, fecha, lugar, area, confianza, nivel, resultado, probabilidad_derrame, probabilidad_sin_derrame, recomendacion, usuario 
                 FROM historial 
                 ORDER BY id DESC
             """)
@@ -678,7 +724,8 @@ def get_historial():
                     "resultado": row[6],
                     "probabilidad_derrame": float(row[7]) if row[7] is not None else 0.0,
                     "probabilidad_sin_derrame": float(row[8]) if row[8] is not None else 0.0,
-                    "recomendacion": row[9]
+                    "recomendacion": row[9],
+                    "usuario": row[10] if len(row) > 10 and row[10] else "admin"
                 })
             
             return jsonify({
@@ -689,6 +736,32 @@ def get_historial():
         return jsonify({
             "success": False,
             "message": f"Error al consultar el historial: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/historial/<int:rec_id>", methods=["DELETE"])
+def delete_historial(rec_id):
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos."
+        }), 500
+    
+    try:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM historial WHERE id = %s", (rec_id,))
+            conn.commit()
+            return jsonify({
+                "success": True,
+                "message": f"Detección #{rec_id} eliminada exitosamente."
+            })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al eliminar la detección: {str(e)}"
         }), 500
     finally:
         conn.close()

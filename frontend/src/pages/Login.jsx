@@ -32,6 +32,8 @@ export default function Login() {
       if (data.success) {
         // Guardamos sesión en localStorage (memoria del navegador)
         localStorage.setItem('usuario', data.usuario);
+        localStorage.setItem('nombre', data.nombre || data.usuario);
+        localStorage.setItem('rol', data.rol || 'usuario');
         navigate('/inicio');  // Redirigimos al dashboard
       } else {
         setError(data.message || 'Usuario o contraseña incorrectos.');

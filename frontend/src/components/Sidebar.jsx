@@ -19,8 +19,18 @@ export default function Sidebar({ seccionActiva }) {
   // Cierra la sesión borrando localStorage y vuelve al login
   function cerrarSesion() {
     localStorage.removeItem('usuario')
+    localStorage.removeItem('nombre')
+    localStorage.removeItem('rol')
     navigate('/')
   }
+
+  const rol = localStorage.getItem('rol') || 'usuario'
+  const itemsFiltrados = MENU_ITEMS.filter(item => {
+    if (item.ruta === '/usuarios' && rol !== 'admin') {
+      return false
+    }
+    return true
+  })
 
   return (
     <nav className="sidebar">
@@ -35,7 +45,7 @@ export default function Sidebar({ seccionActiva }) {
       </div>
 
       {/* Ítems del menú generados desde el array MENU_ITEMS */}
-      {MENU_ITEMS.map(item => (
+      {itemsFiltrados.map(item => (
         <button
           key={item.ruta}
           className={`sidebar-link ${seccionActiva === item.ruta ? 'activo' : ''}`}

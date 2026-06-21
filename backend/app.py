@@ -103,17 +103,27 @@ def init_db():
                         usuario VARCHAR(150) UNIQUE NOT NULL,
                         contrasena VARCHAR(256) NOT NULL,
                         nombre VARCHAR(150),
+                        rol VARCHAR(50) DEFAULT 'usuario',
                         fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 """)
+                # Asegurar columna rol si la tabla ya existía
+                try:
+                    cur.execute("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS rol VARCHAR(50) DEFAULT 'usuario';")
+                except Exception as migration_e:
+                    print(f"Migración de rol ignorada o no compatible: {migration_e}")
+                
                 # Semilla de usuario admin por defecto
                 cur.execute("SELECT COUNT(*) FROM usuarios")
                 if cur.fetchone()[0] == 0:
                     hashed_pw = generate_password_hash("1234")
                     cur.execute("""
-                        INSERT INTO usuarios (usuario, contrasena, nombre)
-                        VALUES (%s, %s, %s)
-                    """, ("admin", hashed_pw, "Administrador"))
+                        INSERT INTO usuarios (usuario, contrasena, nombre, rol)
+                        VALUES (%s, %s, %s, %s)
+                    """, ("admin", hashed_pw, "Administrador", "admin"))
+                else:
+                    # Asegurar que admin tenga el rol 'admin'
+                    cur.execute("UPDATE usuarios SET rol = 'admin' WHERE usuario = 'admin'")
                 conn.commit()
             print("Base de datos inicializada correctamente (tablas historial y usuarios listas)")
         except Exception as e:
@@ -183,15 +193,16 @@ def login():
 
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT contrasena, nombre FROM usuarios WHERE usuario = %s", (usuario,))
+            cur.execute("SELECT contrasena, nombre, rol FROM usuarios WHERE usuario = %s", (usuario,))
             row = cur.fetchone()
             if row:
-                contrasena_hash, nombre = row
+                contrasena_hash, nombre, rol = row
                 if check_password_hash(contrasena_hash, clave):
                     return jsonify({
                         "success": True,
                         "usuario": usuario,
-                        "nombre": nombre
+                        "nombre": nombre,
+                        "rol": rol or "usuario"
                     })
         return jsonify({
             "success": False,
@@ -344,6 +355,124 @@ def delete_usuario(user_id):
         }), 500
     finally:
         conn.close()
+
+
+# ============================================================
+# ENDPOINTS PARA MÉTRICAS Y ACTIVIDAD (Dashboard Inicio)
+# ============================================================
+
+@app.route("/api/stats", methods=["GET"])
+def get_stats():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos."
+        }), 500
+    
+    try:
+        with conn.cursor() as cur:
+            # 1. Total derrames detectados (nivel alto o medio)
+            cur.execute("SELECT COUNT(*) FROM historial WHERE nivel IN ('alto', 'medio')")
+            derrames = cur.fetchone()[0]
+            
+            # 2. Alertas críticas (donde nivel = 'alto')
+            cur.execute("SELECT COUNT(*) FROM historial WHERE nivel = 'alto'")
+            alertas_criticas = cur.fetchone()[0]
+            
+            # 3. Suma de área afectada en km²
+            # Extraemos la parte numérica (ej: '3.2 km²' -> 3.2)
+            cur.execute("""
+                SELECT SUM(
+                    CAST(
+                        NULLIF(
+                            SPLIT_PART(area, ' ', 1), 
+                            ''
+                        ) AS NUMERIC
+                    )
+                ) 
+                FROM historial 
+                WHERE area IS NOT NULL AND area LIKE '%km%'
+            """)
+            area_sum = cur.fetchone()[0]
+            area_sum = round(float(area_sum), 1) if area_sum is not None else 0.0
+            
+            # 4. Confianza promedio de la IA (ej: '91.23%' -> 91.23)
+            cur.execute("""
+                SELECT AVG(
+                    CAST(
+                        NULLIF(
+                            RTRIM(confianza, '%'), 
+                            ''
+                        ) AS NUMERIC
+                    )
+                ) 
+                FROM historial 
+                WHERE confianza IS NOT NULL
+            """)
+            avg_conf = cur.fetchone()[0]
+            avg_conf = round(float(avg_conf), 1) if avg_conf is not None else 0.0
+            
+            return jsonify({
+                "success": True,
+                "derrames": derrames,
+                "alertas_criticas": alertas_criticas,
+                "area_afectada": area_sum,
+                "precision_promedio": avg_conf
+            })
+    except Exception as e:
+        return jsonify({
+            "success": True,
+            "derrames": 0,
+            "alertas_criticas": 0,
+            "area_afectada": 0.0,
+            "precision_promedio": 0.0,
+            "note": f"Fallback: {str(e)}"
+        })
+    finally:
+        conn.close()
+
+
+@app.route("/api/actividad", methods=["GET"])
+def get_actividad():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos."
+        }), 500
+    
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT fecha, lugar, area, nivel 
+                FROM historial 
+                ORDER BY id DESC 
+                LIMIT 5
+            """)
+            rows = cur.fetchall()
+            
+            actividad_list = []
+            for row in rows:
+                actividad_list.append({
+                    "fecha": row[0],
+                    "lugar": row[1],
+                    "area": row[2],
+                    "nivel": row[3]
+                })
+            
+            return jsonify({
+                "success": True,
+                "data": actividad_list
+            })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al consultar la actividad: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
+
 
 # ============================================================
 # RUTA DE PREDICCIÓN

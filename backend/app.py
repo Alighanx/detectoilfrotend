@@ -357,6 +357,62 @@ def delete_usuario(user_id):
         conn.close()
 
 
+@app.route("/api/usuarios/change-password", methods=["POST"])
+def change_password():
+    data = request.get_json()
+    usuario = data.get("usuario")
+    clave_actual = data.get("clave_actual")
+    clave_nueva = data.get("clave_nueva")
+
+    if not usuario or not clave_actual or not clave_nueva:
+        return jsonify({
+            "success": False,
+            "message": "Todos los campos son requeridos."
+        }), 400
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({
+            "success": False,
+            "message": "No se pudo conectar a la base de datos."
+        }), 500
+
+    try:
+        with conn.cursor() as cur:
+            # Buscar el usuario
+            cur.execute("SELECT contrasena FROM usuarios WHERE usuario = %s", (usuario,))
+            row = cur.fetchone()
+            if not row:
+                return jsonify({
+                    "success": False,
+                    "message": "Usuario no encontrado."
+                }), 404
+            
+            hashed_pw = row[0]
+            # Validar la contraseña antigua
+            if not check_password_hash(hashed_pw, clave_actual):
+                return jsonify({
+                    "success": False,
+                    "message": "La contraseña actual es incorrecta."
+                }), 400
+                
+            # Generar hash de la nueva contraseña y actualizar
+            new_hashed_pw = generate_password_hash(clave_nueva)
+            cur.execute("UPDATE usuarios SET contrasena = %s WHERE usuario = %s", (new_hashed_pw, usuario))
+            conn.commit()
+            return jsonify({
+                "success": True,
+                "message": "Contraseña cambiada exitosamente."
+            })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error al cambiar la contraseña: {str(e)}"
+        }), 500
+    finally:
+        conn.close()
+
+
 # ============================================================
 # ENDPOINTS PARA MÉTRICAS Y ACTIVIDAD (Dashboard Inicio)
 # ============================================================

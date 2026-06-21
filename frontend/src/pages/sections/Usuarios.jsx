@@ -1,6 +1,3 @@
-// ============================================================
-// Usuarios.jsx — Sección para la gestión de usuarios en base de datos
-// ============================================================
 import { useState, useEffect } from 'react'
 
 export default function Usuarios() {
@@ -17,7 +14,6 @@ export default function Usuarios() {
 
   const usuarioLogueado = localStorage.getItem('usuario') || ''
 
-  // Carga la lista de usuarios desde el backend
   async function cargarUsuarios() {
     try {
       const apiBase = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
@@ -45,7 +41,6 @@ export default function Usuarios() {
     cargarUsuarios()
   }, [])
 
-  // Registrar un nuevo usuario
   async function handleRegistrar(e) {
     e.preventDefault()
     setRegistrando(true)
@@ -72,11 +67,9 @@ export default function Usuarios() {
 
       if (data.success) {
         setSuccess(data.message || 'Usuario registrado con éxito.')
-        // Limpiar campos
         setNombre('')
         setUsuario('')
         setContrasena('')
-        // Recargar lista de usuarios
         await cargarUsuarios()
       } else {
         setError(data.message || 'No se pudo registrar el usuario.')
@@ -89,7 +82,6 @@ export default function Usuarios() {
     }
   }
 
-  // Eliminar un usuario
   async function handleEliminar(id, username) {
     if (username === 'admin') {
       alert('❌ El usuario principal "admin" no puede ser eliminado.')
@@ -132,133 +124,164 @@ export default function Usuarios() {
 
   return (
     <>
-      <h1 className="seccion-titulo">👥 Gestión de Usuarios</h1>
-      <p className="seccion-subtitulo">Administra las cuentas y contraseñas con acceso al sistema</p>
+      <h1 className="seccion-titulo">Gestión de Cuentas</h1>
+      <p className="seccion-subtitulo">Administra los accesos de red y credenciales de los operadores del sistema</p>
 
       {/* Alertas de Mensaje */}
-      {success && <div className="card-custom" style={{ padding: '15px 20px', color: '#96f3b1', background: 'rgba(13,110,63,0.18)', border: '1px solid rgba(13,110,63,0.3)', marginBottom: 20 }}>✅ {success}</div>}
-      {error && <div className="card-custom" style={{ padding: '15px 20px', color: '#ff9a9a', background: 'rgba(192,57,43,0.15)', border: '1px solid rgba(192,57,43,0.3)', marginBottom: 20 }}>❌ {error}</div>}
+      {success && <div style={{ color: '#a7f3d0', background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.15)', padding: '12px 18px', borderRadius: 12, fontSize: '0.86rem', marginBottom: 20 }}>✅ {success}</div>}
+      {error && <div style={{ color: '#fca5a5', background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.15)', padding: '12px 18px', borderRadius: 12, fontSize: '0.86rem', marginBottom: 20 }}>❌ {error}</div>}
 
       <div className="row g-4">
         
-        {/* Tabla de Usuarios */}
+        {/* Tabla de Usuarios Registrados */}
         <div className="col-md-7">
-          <div className="card-custom" style={{ minHeight: '350px' }}>
-            <h5 style={{ color: '#ccc', marginBottom: 20 }}>Lista de Cuentas</h5>
+          <div className="card-custom" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
+            <h5 style={{ color: '#fff', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
+              👥 Cuentas de Operadores Registrados
+            </h5>
             
             {loading ? (
-              <div style={{ textAlign: 'center', padding: '50px 0', color: '#aaa' }}>
-                <span>⏳ Cargando usuarios...</span>
+              <div style={{ margin: 'auto 0', textAlign: 'center', color: 'var(--color-texto-muted)' }}>
+                <span>⏳ Obteniendo registros de usuarios...</span>
               </div>
             ) : (
-              <table className="tabla-custom">
-                <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Usuario</th>
-                    <th>Registro</th>
-                    <th style={{ textAlign: 'center' }}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {usuarios.length > 0 ? (
-                    usuarios.map(user => (
-                      <tr key={user.id}>
-                        <td>
-                          <strong>{user.nombre}</strong>
-                        </td>
-                        <td>
-                          <code style={{ background: 'rgba(255,255,255,0.08)', padding: '3px 6px', borderRadius: 4, color: '#6f8dff' }}>
-                            {user.usuario}
-                          </code>
-                        </td>
-                        <td style={{ fontSize: '0.82rem', color: '#9bb0c8' }}>
-                          {user.fecha_registro.split(' ')[0]}
-                        </td>
-                        <td style={{ textAlign: 'center' }}>
-                          <button
-                            className="btn-principal btn-sm"
-                            style={{
-                              background: user.usuario === 'admin' || user.usuario === usuarioLogueado 
-                                ? 'rgba(255, 93, 93, 0.04)' 
-                                : 'rgba(255, 93, 93, 0.15)',
-                              color: user.usuario === 'admin' || user.usuario === usuarioLogueado 
-                                ? '#ff9a9a55' 
-                                : '#ff9a9a',
-                              border: 'none',
-                              cursor: user.usuario === 'admin' || user.usuario === usuarioLogueado ? 'not-allowed' : 'pointer',
-                              boxShadow: 'none'
-                            }}
-                            onClick={() => handleEliminar(user.id, user.usuario)}
-                            disabled={user.usuario === 'admin' || user.usuario === usuarioLogueado}
-                            title={
-                              user.usuario === 'admin' 
-                                ? 'No se puede eliminar el administrador por defecto' 
-                                : user.usuario === usuarioLogueado 
-                                ? 'No puedes eliminar tu propio usuario en sesión' 
-                                : 'Eliminar usuario'
-                            }
-                          >
-                            🗑️ Eliminar
-                          </button>
+              <div className="tabla-custom-wrapper" style={{ flex: 1 }}>
+                <table className="tabla-custom">
+                  <thead>
+                    <tr>
+                      <th>Operador</th>
+                      <th>Identificador</th>
+                      <th>Fecha Registro</th>
+                      <th style={{ textAlign: 'center' }}>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {usuarios.length > 0 ? (
+                      usuarios.map(user => (
+                        <tr key={user.id}>
+                          <td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <div style={{
+                                width: 30,
+                                height: 30,
+                                borderRadius: 8,
+                                background: user.usuario === 'admin' ? 'linear-gradient(135deg, #6366f1, #06b6d4)' : 'linear-gradient(135deg, #10b981, #06b6d4)',
+                                display: 'grid',
+                                placeItems: 'center',
+                                color: '#fff',
+                                fontWeight: 700,
+                                fontSize: '0.78rem'
+                              }}>
+                                {user.nombre.charAt(0).toUpperCase()}
+                              </div>
+                              <strong style={{ color: '#fff' }}>{user.nombre}</strong>
+                            </div>
+                          </td>
+                          <td>
+                            <code style={{ background: 'rgba(255,255,255,0.06)', padding: '3px 8px', borderRadius: 6, color: 'var(--color-acento)', fontSize: '0.82rem', fontFamily: 'monospace' }}>
+                              @{user.usuario}
+                            </code>
+                          </td>
+                          <td style={{ fontSize: '0.82rem', color: 'var(--color-texto-muted)' }}>
+                            {user.fecha_registro.split(' ')[0]}
+                          </td>
+                          <td style={{ textAlign: 'center' }}>
+                            <button
+                              className="btn-principal btn-sm"
+                              style={{
+                                background: user.usuario === 'admin' || user.usuario === usuarioLogueado 
+                                  ? 'rgba(255, 255, 255, 0.02)' 
+                                  : 'rgba(239, 68, 68, 0.12)',
+                                color: user.usuario === 'admin' || user.usuario === usuarioLogueado 
+                                  ? 'rgba(255,255,255,0.15)' 
+                                  : 'var(--color-peligro)',
+                                border: '1px solid ' + (user.usuario === 'admin' || user.usuario === usuarioLogueado ? 'rgba(255,255,255,0.04)' : 'rgba(239,68,68,0.2)'),
+                                cursor: user.usuario === 'admin' || user.usuario === usuarioLogueado ? 'not-allowed' : 'pointer',
+                                boxShadow: 'none'
+                              }}
+                              onClick={() => handleEliminar(user.id, user.usuario)}
+                              disabled={user.usuario === 'admin' || user.usuario === usuarioLogueado}
+                              title={
+                                user.usuario === 'admin' 
+                                  ? 'Administrador maestro protegido' 
+                                  : user.usuario === usuarioLogueado 
+                                  ? 'Sesión de red activa' 
+                                  : 'Dar de baja'
+                              }
+                            >
+                              Dar de baja
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4" style={{ textAlign: 'center', color: 'var(--color-texto-muted)', padding: 30 }}>
+                          No hay usuarios registrados en el sistema.
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" style={{ textAlign: 'center', color: '#666', padding: 30 }}>
-                        No hay usuarios registrados.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Formulario de Registro */}
+        {/* Registro de Cuentas */}
         <div className="col-md-5">
           <div className="card-custom">
-            <h5 style={{ color: '#ccc', marginBottom: 20 }}>➕ Registrar Nuevo Usuario</h5>
+            <h5 style={{ color: '#fff', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
+              ➕ Crear Credencial de Red
+            </h5>
             
-            <form onSubmit={handleRegistrar}>
-              <label className="form-label">Nombre Completo</label>
-              <input
-                type="text"
-                className="input-custom"
-                placeholder="Ej. Juan Pérez"
-                value={nombre}
-                onChange={e => setNombre(e.target.value)}
-              />
+            <form onSubmit={handleRegistrar} style={{ display: 'grid', gap: 16 }}>
+              <div>
+                <label className="form-label" style={{ fontSize: '0.74rem' }}>Nombre Completo</label>
+                <input
+                  type="text"
+                  className="input-custom"
+                  placeholder="Ej. Ing. Carlos Mendoza"
+                  value={nombre}
+                  onChange={e => setNombre(e.target.value)}
+                  style={{ marginBottom: 0 }}
+                  required
+                />
+              </div>
 
-              <label className="form-label">Usuario</label>
-              <input
-                type="text"
-                className="input-custom"
-                placeholder="Ej. jperez (letras, números y guiones)"
-                value={usuario}
-                onChange={e => setUsuario(e.target.value)}
-                required
-              />
+              <div>
+                <label className="form-label" style={{ fontSize: '0.74rem' }}>Nombre de Usuario (Red ID)</label>
+                <input
+                  type="text"
+                  className="input-custom"
+                  placeholder="Ej. cmendoza"
+                  value={usuario}
+                  onChange={e => setUsuario(e.target.value)}
+                  style={{ marginBottom: 0 }}
+                  required
+                />
+              </div>
 
-              <label className="form-label">Contraseña</label>
-              <input
-                type="password"
-                className="input-custom"
-                placeholder="Mínimo 4 caracteres"
-                value={contrasena}
-                onChange={e => setContrasena(e.target.value)}
-                required
-              />
+              <div>
+                <label className="form-label" style={{ fontSize: '0.74rem' }}>Clave de Acceso Inicial</label>
+                <input
+                  type="password"
+                  className="input-custom"
+                  placeholder="Mínimo 4 caracteres"
+                  value={contrasena}
+                  onChange={e => setContrasena(e.target.value)}
+                  style={{ marginBottom: 0 }}
+                  required
+                />
+              </div>
 
               <button
                 type="submit"
                 className="btn-principal"
-                style={{ width: '100%', marginTop: 10 }}
+                style={{ width: '100%', marginTop: 8, justifyContent: 'center' }}
                 disabled={registrando}
               >
-                {registrando ? '⏳ Registrando...' : '👤 Crear Cuenta'}
+                {registrando ? '⏳ Registrando credencial...' : '➕ Habilitar Operador'}
               </button>
             </form>
           </div>

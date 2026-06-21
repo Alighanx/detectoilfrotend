@@ -15,7 +15,7 @@ export default function NuevaDeteccion() {
   const [resultado, setResultado] = useState(null)
   const [progreso, setProgreso] = useState(0)
   const [fecha, setFecha] = useState(getTodayDateString())
-  const [dateMode, setDateMode] = useState('hoy') // 'hoy', 'orbit', 'manual'
+  const [dateMode, setDateMode] = useState('hoy') // 'hoy', 'manual'
   const [zona, setZona] = useState('')
   const [error, setError] = useState('')
   const [isDragging, setIsDragging] = useState(false)
@@ -234,33 +234,6 @@ export default function NuevaDeteccion() {
                       }}
                     >
                       Hoy
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setDateMode('orbit');
-                        const prev = new Date();
-                        prev.setDate(prev.getDate() - 5);
-                        const yyyy = prev.getFullYear();
-                        const mm = String(prev.getMonth() + 1).padStart(2, '0');
-                        const dd = String(prev.getDate()).padStart(2, '0');
-                        setFecha(`${yyyy}-${mm}-${dd}`);
-                      }}
-                      style={{
-                        flex: 1,
-                        padding: '6px 4px',
-                        border: 'none',
-                        borderRadius: 6,
-                        background: dateMode === 'orbit' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
-                        color: dateMode === 'orbit' ? 'var(--color-acento)' : 'var(--color-texto-muted)',
-                        fontSize: '0.7rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        border: dateMode === 'orbit' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid transparent'
-                      }}
-                    >
-                      Órbita
                     </button>
                     <button
                       type="button"

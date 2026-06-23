@@ -14,10 +14,10 @@ const PASOS_FLUJO = [
 ]
 
 const EQUIPO = [
-  { emoji: '👨‍💻', nombre: 'Alighan', rol: 'Arquitectura & API Backend' },
-  { emoji: '👩‍💻', nombre: 'Integrante 2', rol: 'Desarrollo Frontend React' },
-  { emoji: '👩‍🔬', nombre: 'Integrante 3', rol: 'Entrenamiento CNN IA' },
-  { emoji: '👨‍🎨', nombre: 'Integrante 4', rol: 'Diseño UX/UI Científico' },
+  { emoji: '👨‍💻', nombre: 'Jesus Angel Pillco Quispe', rol: 'Arquitectura & API Backend' },
+  { emoji: '👩‍💻', nombre: 'Anderson Jose Murrugarra Retamozo', rol: 'Desarrollo Frontend React' },
+  { emoji: '👩‍🔬', nombre: 'Mauricio Franco Arias', rol: 'Entrenamiento CNN IA' },
+  { emoji: '👨‍🎨', nombre: 'Lenin Allister Alvarez Jara', rol: 'Diseño UX/UI Científico' },
 ]
 
 export default function Informacion() {

@@ -1,4 +1,6 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const getTodayDateString = () => {
   const today = new Date();
@@ -19,8 +21,32 @@ export default function NuevaDeteccion() {
   const [zona, setZona] = useState('')
   const [error, setError] = useState('')
   const [isDragging, setIsDragging] = useState(false)
-
+  
   const inputRef = useRef(null)
+  
+  // Obtener tema actual para ToastContainer
+  const [tema, setTema] = useState(() => {
+    const guardado = localStorage.getItem('tema')
+    return guardado || 'dark'
+  })
+  
+  useEffect(() => {
+    const handleThemeChange = () => {
+      const nuevoTema = localStorage.getItem('tema') || 'dark'
+      setTema(nuevoTema)
+    }
+    
+    window.addEventListener('storage', handleThemeChange)
+    const interval = setInterval(() => {
+      const nuevoTema = localStorage.getItem('tema') || 'dark'
+      if (nuevoTema !== tema) setTema(nuevoTema)
+    }, 1000)
+    
+    return () => {
+      window.removeEventListener('storage', handleThemeChange)
+      clearInterval(interval)
+    }
+  }, [tema])
 
   function handleDragOver(e) {
     e.preventDefault()
@@ -48,6 +74,23 @@ export default function NuevaDeteccion() {
   }
 
   function procesarArchivo(archivoSeleccionado) {
+    // Validación de tamaño máximo (5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB en bytes
+    if (archivoSeleccionado.size > maxSize) {
+      toast.error('❌ El archivo excede el tamaño máximo permitido (5MB)')
+      return
+    }
+    
+    // Validación de extensión
+    const extensionesValidas = ['.jpg', '.jpeg', '.png', '.tif', '.tiff']
+    const nombreArchivo = archivoSeleccionado.name.toLowerCase()
+    const extensionValida = extensionesValidas.some(ext => nombreArchivo.endsWith(ext))
+    
+    if (!extensionValida) {
+      toast.error('❌ Formato no válido. Solo se permiten JPG, PNG y TIF')
+      return
+    }
+    
     setArchivo(archivoSeleccionado)
     const lector = new FileReader()
     lector.onload = ev => setPreview(ev.target.result)
@@ -55,11 +98,12 @@ export default function NuevaDeteccion() {
     setResultado(null)
     setProgreso(0)
     setError('')
+    toast.info('📁 Imagen cargada correctamente')
   }
 
   async function handleAnalizar() {
     if (!archivo) {
-      alert('⚠️ Por favor, cargue una imagen satelital primero.')
+      toast.warning('⚠️ Por favor, cargue una imagen satelital primero.')
       return
     }
 
@@ -92,12 +136,15 @@ export default function NuevaDeteccion() {
       if (data.success) {
         setResultado(data)
         setProgreso(100)
+        toast.success('✅ Análisis completado exitosamente')
       } else {
+        toast.error(data.message || 'No se pudo analizar la imagen.')
         setError(data.message || 'No se pudo analizar la imagen.')
       }
 
     } catch (err) {
       console.error(err)
+      toast.error('❌ Error de conexión al conectar con el servidor de análisis.')
       setError('Error de conexión al conectar con el servidor de análisis.')
     } finally {
       setAnalizando(false)
@@ -106,6 +153,19 @@ export default function NuevaDeteccion() {
 
   return (
     <>
+      <ToastContainer 
+        position="top-right"
+        autoClose={3500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={tema}
+      />
+    
       <h1 className="seccion-titulo">Nueva Detección</h1>
       <p className="seccion-subtitulo">
         Carga una captura multiespectral para procesar mediante la Red Neuronal Convolucional (CNN).

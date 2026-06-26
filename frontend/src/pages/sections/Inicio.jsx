@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
+import { Pie, Bar } from 'react-chartjs-2'
+
+// Registrar componentes de Chart.js
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title)
 
 function Contador({ meta, sufijo = '' }) {
   const [valor, setValor] = useState(0)
@@ -336,6 +341,136 @@ export default function Inicio() {
                 <span style={{ fontSize: '0.86rem' }}>Sin análisis en base de datos. Completa un diagnóstico para poblar la lista.</span>
               </div>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* Sección de Gráficos Estadísticos */}
+      <div className="row g-4 mt-2">
+        <div className="col-md-6">
+          <div className="card-custom" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <h5 style={{ marginBottom: 16, color: '#fff', fontSize: '1.05rem', fontWeight: 700 }}>
+              🥧 Distribución de Derrames vs. No Derrames
+            </h5>
+            <div style={{ flex: 1, minHeight: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {stats.total_analisis > 0 ? (
+                <Pie
+                  data={{
+                    labels: ['Derrames Detectados', 'Zonas Limpias'],
+                    datasets: [{
+                      data: [stats.derrames, stats.total_analisis - stats.derrames],
+                      backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                      ],
+                      borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(16, 185, 129, 1)'
+                      ],
+                      borderWidth: 2
+                    }]
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        position: 'bottom',
+                        labels: {
+                          color: '#e2e8f0',
+                          font: { size: 12 }
+                        }
+                      },
+                      tooltip: {
+                        callbacks: {
+                          label: (context) => {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0)
+                            const percentage = ((context.raw / total) * 100).toFixed(1)
+                            return `${context.label}: ${context.raw} (${percentage}%)`
+                          }
+                        }
+                      }
+                    }
+                  }}
+                />
+              ) : (
+                <p style={{ color: 'var(--color-texto-muted)', textAlign: 'center' }}>
+                  No hay datos suficientes para mostrar el gráfico
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card-custom" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <h5 style={{ marginBottom: 16, color: '#fff', fontSize: '1.05rem', fontWeight: 700 }}>
+              📊 Distribución por Nivel de Alerta
+            </h5>
+            <div style={{ flex: 1, minHeight: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {actividad.length > 0 ? (
+                <Bar
+                  data={{
+                    labels: ['Alto', 'Medio', 'Bajo'],
+                    datasets: [{
+                      label: 'Cantidad de Alertas',
+                      data: [
+                        actividad.filter(a => a.nivel === 'alto').length,
+                        actividad.filter(a => a.nivel === 'medio').length,
+                        actividad.filter(a => a.nivel === 'bajo').length
+                      ],
+                      backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                      ],
+                      borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(245, 158, 11, 1)',
+                        'rgba(16, 185, 129, 1)'
+                      ],
+                      borderWidth: 2
+                    }]
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        display: false
+                      },
+                      title: {
+                        display: false
+                      }
+                    },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        ticks: {
+                          stepSize: 1,
+                          color: '#94a3b8'
+                        },
+                        grid: {
+                          color: 'rgba(255, 255, 255, 0.05)'
+                        }
+                      },
+                      x: {
+                        ticks: {
+                          color: '#94a3b8'
+                        },
+                        grid: {
+                          display: false
+                        }
+                      }
+                    }
+                  }}
+                />
+              ) : (
+                <p style={{ color: 'var(--color-texto-muted)', textAlign: 'center' }}>
+                  No hay datos suficientes para mostrar el gráfico
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>

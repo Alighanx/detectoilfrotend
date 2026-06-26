@@ -4,13 +4,64 @@
 
 ---
 
+## ✨ Características Principales
+
+### 🔐 Autenticación Completa
+- **Login seguro** con validación de credenciales contra backend o localStorage
+- **Registro de usuarios** con validación de campos y verificación case-insensitive
+- **Roles de usuario** (admin/usuario) con permisos diferenciados
+- **Usuario por defecto**: `admin` / `admin123`
+
+### 🎨 Sistema de Temas Claro/Oscuro
+- Toggle dinámico entre tema claro y oscuro desde la Topbar
+- Diseño moderno con colores suaves en tema claro
+- Persistencia de preferencia en localStorage
+- Notificaciones Toast adaptadas al tema seleccionado
+
+### 📊 Dashboard con Gráficos Estadísticos
+- Gráfico circular (Pie): Distribución Derrames vs. No Derrames
+- Gráfico de barras: Alertas por nivel (Alto, Medio, Bajo)
+- Contadores animados en tiempo real
+- Variables ambientales simuladas (temperatura, humedad, nivel de río)
+
+### 🔔 Notificaciones Toast
+- Reemplazo de alerts nativos por notificaciones elegantes
+- Feedback visual para todas las acciones del usuario
+- Temas adaptables (claro/oscuro)
+- Posicionamiento configurable
+
+### 🖼️ Nueva Detección Mejorada
+- Validación de archivos (máx 5MB, solo JPG/PNG/TIF)
+- Drag & drop para carga de imágenes
+- Vista comparativa antes/después del análisis
+- Indicadores visuales claros de resultados
+- Barras de progreso de confianza IA
+
+### 📋 Historial con Filtros Avanzados
+- Buscador de texto múltiple (ID, fecha, ubicación, severidad)
+- Filtro dropdown por nivel de alerta
+- Filtro por fecha específica
+- Contador dinámico de resultados
+- **Exportación a CSV** con un clic
+
+### 👥 Gestión de Usuarios
+- Módulo administrativo para alta/baja de operadores
+- Restablecimiento de contraseñas
+- Visualización de lista de usuarios registrados
+
+---
+
 ## 🚀 Arquitectura y Stack Tecnológico
 
 El proyecto está dividido en un esquema moderno de cliente-servidor (**Frontend** y **Backend**):
 
 ### 🎨 Frontend (Consola del Operador)
 * **Framework**: React.js con Vite (rápido y optimizado para desarrollo).
-* **Estilos**: Vanilla CSS con variables de diseño personalizadas (Paleta HSL, tema oscuro espacial, efectos de cristal translúcido (*glassmorphism*) y micro-animaciones en neón).
+* **Librerías Clave**:
+  - `react-router-dom`: Navegación entre páginas
+  - `chart.js` + `react-chartjs-2`: Gráficos estadísticos (Pastel y Barras)
+  - `react-toastify`: Notificaciones Toast modernas
+* **Estilos**: Vanilla CSS con variables de diseño personalizadas (Paleta HSL, tema oscuro/claro dinámico, efectos de cristal translúcido (*glassmorphism*) y micro-animaciones en neón).
 * **Componentes Clave**:
   * **Dashboard**: Panel central con telemetría en tiempo real de estaciones hidrométricas simuladas (temperatura subacuática, nivel del caudal del Río Napo y humedad relativa) y contadores animados.
   * **Nueva Detección**: Consola interactiva para cargar imágenes, ingresar metadatos y visualizar el veredicto del escaneo satelital con gráficos circulares interactivos.

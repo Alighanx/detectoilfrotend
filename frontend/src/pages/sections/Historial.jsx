@@ -237,9 +237,16 @@ export default function Historial() {
       {/* Database Table Container */}
       <div className="card-custom">
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '50px 0', color: 'var(--color-texto-muted)' }}>
-            <span style={{ fontSize: '2rem', display: 'block', marginBottom: 12 }}>⏳</span>
-            Sincronizando registros con la base de datos central...
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="skeleton-table-row">
+                <div className="skeleton skeleton-table-cell" />
+                <div className="skeleton skeleton-table-cell" />
+                <div className="skeleton skeleton-table-cell" />
+                <div className="skeleton skeleton-table-cell" />
+                <div className="skeleton skeleton-table-cell" />
+              </div>
+            ))}
           </div>
         ) : error ? (
           <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--color-peligro)' }}>

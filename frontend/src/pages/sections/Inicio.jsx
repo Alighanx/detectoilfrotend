@@ -304,8 +304,15 @@ export default function Inicio() {
             </p>
             
             {loading ? (
-              <div style={{ margin: 'auto 0', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '40px 0', color: 'var(--color-texto-muted)' }}>
-                <span style={{ fontSize: '0.88rem' }}>Cargando actividad...</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="skeleton-table-row">
+                    <div className="skeleton skeleton-table-cell" />
+                    <div className="skeleton skeleton-table-cell" />
+                    <div className="skeleton skeleton-table-cell" />
+                    <div className="skeleton skeleton-table-cell" />
+                  </div>
+                ))}
               </div>
             ) : actividad.length > 0 ? (
               <div className="tabla-custom-wrapper" style={{ flex: 1 }}>

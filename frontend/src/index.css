@@ -1240,6 +1240,110 @@ a {
 }
 
 /* ════════════════════════════════════════
+   SKELETON LOADING - CARGA ESQUELÉTICA
+   ════════════════════════════════════════ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.08) 0%,
+    rgba(148, 163, 184, 0.15) 50%,
+    rgba(148, 163, 184, 0.08) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.4s ease-in-out infinite;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme='light'] .skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.15) 0%,
+    rgba(148, 163, 184, 0.25) 50%,
+    rgba(148, 163, 184, 0.15) 100%
+  );
+  background-size: 200% 100%;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
+  );
+  animation: skeleton-shimmer 2s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes skeleton-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Variantes de skeleton */
+.skeleton-text {
+  height: 16px;
+  width: 100%;
+}
+
+.skeleton-text.short { width: 40%; }
+.skeleton-text.medium { width: 60%; }
+.skeleton-text.long { width: 80%; }
+
+.skeleton-title {
+  height: 24px;
+  width: 70%;
+  margin-bottom: 12px;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skeleton-card {
+  height: 120px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.skeleton-chart {
+  height: 280px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.skeleton-table-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.skeleton-table-cell {
+  height: 14px;
+  border-radius: 6px;
+}
+
+.skeleton-table-cell:first-child { width: 20%; }
+.skeleton-table-cell:nth-child(2) { width: 35%; }
+.skeleton-table-cell:nth-child(3) { width: 25%; }
+.skeleton-table-cell:last-child { width: 20%; }
+
+/* ════════════════════════════════════════
    KEYFRAMES & ANIMACIONES
    ════════════════════════════════════════ */
 @keyframes slideUp {

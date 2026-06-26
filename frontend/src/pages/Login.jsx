@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Login() {
   const [usuario, setUsuario] = useState('')
@@ -10,19 +12,33 @@ export default function Login() {
 
   const navigate = useNavigate()
 
+  // Obtener tema actual para ToastContainer
+  const [tema] = useState(() => {
+    const guardado = localStorage.getItem('tema')
+    return guardado || 'dark'
+  })
+
   async function handleSubmit(e) {
     e.preventDefault()
     setIngresando(true)
     setError('')
 
     try {
+      // Primero intentar con el backend
       const apiBase = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
       const API_URL = apiBase ? `${apiBase}/api` : '/api';
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
       const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario, clave })
+        body: JSON.stringify({ usuario, clave }),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
@@ -30,20 +46,64 @@ export default function Login() {
         localStorage.setItem('usuario', data.usuario);
         localStorage.setItem('nombre', data.nombre || data.usuario);
         localStorage.setItem('rol', data.rol || 'usuario');
-        navigate('/inicio');
+        toast.success(`👋 Bienvenido, ${data.nombre || data.usuario}`);
+        setTimeout(() => navigate('/inicio'), 500);
       } else {
+        toast.error(data.message || 'Usuario o contraseña incorrectos.');
         setError(data.message || 'Usuario o contraseña incorrectos.');
       }
     } catch (err) {
       console.error(err);
-      setError('Error al conectar con el servidor de autenticación.');
+      // Fallback a autenticación local si el backend no está disponible
+      const usuariosExistentes = JSON.parse(localStorage.getItem('usuarios') || '[]');
+      
+      // Verificar credenciales admin por defecto
+      if (usuario === 'admin' && clave === 'admin123') {
+        localStorage.setItem('usuario', 'admin');
+        localStorage.setItem('nombre', 'Administrador');
+        localStorage.setItem('rol', 'admin');
+        toast.success('👋 Bienvenido, Administrador');
+        setTimeout(() => navigate('/inicio'), 500);
+        setIngresando(false);
+        return;
+      }
+      
+      // Buscar en usuarios locales
+      const usuarioEncontrado = usuariosExistentes.find(
+        u => u.usuario.toLowerCase() === usuario.toLowerCase() && u.clave === clave
+      );
+      
+      if (usuarioEncontrado) {
+        localStorage.setItem('usuario', usuarioEncontrado.usuario);
+        localStorage.setItem('nombre', usuarioEncontrado.nombre);
+        localStorage.setItem('rol', usuarioEncontrado.rol || 'usuario');
+        toast.success(`👋 Bienvenido, ${usuarioEncontrado.nombre}`);
+        setTimeout(() => navigate('/inicio'), 500);
+      } else {
+        toast.error('❌ Usuario o contraseña incorrectos.');
+        setError('Usuario o contraseña incorrectos.');
+      }
     } finally {
       setIngresando(false)
     }
   }
 
   return (
-    <div className="login-wrapper" style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', width: '100vw' }}>
+    <>
+      <ToastContainer 
+        position="top-right"
+        autoClose={3500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={tema}
+      />
+    
+      <div className="login-wrapper" style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', width: '100vw' }}>
       
       {/* Dynamic drifting background light orbs */}
       <div className="bg-orb orb-1" />
@@ -197,10 +257,28 @@ export default function Login() {
           boxShadow: 'none'
         }}>
           <span style={{ fontSize: '0.76rem', color: 'var(--color-acento)', display: 'block', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
-            🛰️ Credenciales Demo de Monitoreo:
+            🛰️ Credenciales de Acceso:
           </span>
           <span style={{ fontSize: '0.86rem', color: '#fff', fontWeight: 600 }}>
-            Usuario: <code style={{ color: '#fff', background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: 4, fontFamily: 'monospace' }}>admin</code> | Clave: <code style={{ color: '#fff', background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: 4, fontFamily: 'monospace' }}>1234</code>
+            Admin: <code style={{ color: '#fff', background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: 4, fontFamily: 'monospace' }}>admin / admin123</code>
+          </span>
+          <span style={{ fontSize: '0.76rem', color: 'var(--color-texto-muted)', display: 'block', marginTop: 6 }}>
+            ¿No tienes cuenta?{' '}
+            <button 
+              onClick={() => navigate('/registro')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--color-acento)',
+                cursor: 'pointer',
+                fontWeight: 600,
+                textDecoration: 'underline',
+                padding: 0,
+                font: 'inherit'
+              }}
+            >
+              Regístrate aquí
+            </button>
           </span>
         </div>
       </div>
@@ -253,5 +331,6 @@ export default function Login() {
         }
       `}</style>
     </div>
+  </>
   )
 }

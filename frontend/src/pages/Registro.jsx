@@ -105,7 +105,7 @@ export default function Registro() {
   }
 
   // Obtener tema actual para ToastContainer
-  const [tema, setTema] = useState(() => {
+  const [tema] = useState(() => {
     const guardado = localStorage.getItem('tema')
     return guardado || 'dark'
   })

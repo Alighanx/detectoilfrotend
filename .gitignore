@@ -1,3 +1,4 @@
+```
 # Dependencies
 node_modules/
 
@@ -5,8 +6,9 @@ node_modules/
 dist/
 build/
 *.js.map
+*.css.map
 
-# Environment variables
+# Environment
 .env
 .env.local
 *.env.*
@@ -14,6 +16,12 @@ build/
 # Editors
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
 
 # Python
 __pycache__/
@@ -21,20 +29,17 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
-env/
 venv/
 .venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
+.env
+
+# Coverage
+coverage/
+htmlcov/
 .coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
 *.cover
-*.log
-*.tmp
-*.swp
+
+# OS
 .DS_Store
 Thumbs.db
+```

@@ -12,11 +12,14 @@
   "dependencies": {
     "bootstrap": "^5.3.8",
     "chart.js": "^4.5.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.42.0",
     "react": "^19.2.6",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.15.0",
-    "react-toastify": "^11.1.0"
+    "react-toastify": "^11.1.0",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

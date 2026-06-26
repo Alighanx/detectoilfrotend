@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([])
@@ -64,7 +64,8 @@ export default function Usuarios() {
     }
   }
 
-  async function cargarUsuarios() {
+  const cargarUsuarios = useCallback(async () => {
+    setLoading(true)
     try {
       const apiBase = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
       const API_URL = apiBase ? `${apiBase}/api` : '/api';
@@ -85,11 +86,11 @@ export default function Usuarios() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     cargarUsuarios()
-  }, [])
+  }, [cargarUsuarios])
 
   async function handleRegistrar(e) {
     e.preventDefault()

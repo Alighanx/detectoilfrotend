@@ -1,11 +1,21 @@
 import { useState, useEffect } from 'react'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Historial() {
   const [datos, setDatos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [busqueda, setBusqueda] = useState('')
+  const [filtroNivel, setFiltroNivel] = useState('')
+  const [filtroFecha, setFiltroFecha] = useState('')
   const [selectedRecord, setSelectedRecord] = useState(null)
+  
+  // Obtener tema actual para ToastContainer
+  const [tema, setTema] = useState(() => {
+    const guardado = localStorage.getItem('tema')
+    return guardado || 'dark'
+  })
 
   const rol = localStorage.getItem('rol') || 'usuario'
 
@@ -67,6 +77,7 @@ export default function Historial() {
   }, [])
 
   const datosFiltrados = datos.filter(d => {
+    // Filtro de búsqueda por texto
     const fieldsToSearch = [
       d.id,
       d.fecha,
@@ -76,27 +87,151 @@ export default function Historial() {
       d.nivel,
       d.resultado
     ].join(' ').toLowerCase();
-    return fieldsToSearch.includes(busqueda.toLowerCase());
+    
+    const coincideBusqueda = fieldsToSearch.includes(busqueda.toLowerCase());
+    const coincideNivel = !filtroNivel || d.nivel === filtroNivel;
+    const coincideFecha = !filtroFecha || d.fecha === filtroFecha;
+    
+    return coincideBusqueda && coincideNivel && coincideFecha;
   })
+
+  function exportarCSV() {
+    if (datosFiltrados.length === 0) {
+      toast.warning('⚠️ No hay datos para exportar')
+      return
+    }
+    
+    const headers = ['ID', 'Fecha', 'Ubicación', 'Área', 'Confianza', 'Nivel', 'Resultado', 'Usuario']
+    const csvContent = [
+      headers.join(','),
+      ...datosFiltrados.map(d => 
+        [d.id, d.fecha, d.lugar, d.area, d.confianza, d.nivel, d.resultado, d.usuario].join(',')
+      )
+    ].join('\n')
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `detecciones_${new Date().toISOString().split('T')[0]}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    toast.success('✅ CSV exportado exitosamente')
+  }
 
   return (
     <>
+      <ToastContainer 
+        position="top-right"
+        autoClose={3500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={tema}
+      />
+    
       <h1 className="seccion-titulo">Historial de Detecciones</h1>
       <p className="seccion-subtitulo">Registro histórico de imágenes analizadas y diagnósticos almacenados</p>
 
-      {/* Glowing Search Filter */}
+      {/* Filtros Avanzados */}
       <div className="card-custom" style={{ padding: '16px 20px', marginBottom: 20 }}>
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <span style={{ position: 'absolute', left: 16, opacity: 0.6, fontSize: '0.9rem' }}>🔍</span>
-          <input
-            type="text"
-            className="input-custom"
-            placeholder="Buscar por fecha de captura, zona de monitoreo, severidad..."
-            style={{ paddingLeft: 44, marginBottom: 0 }}
-            value={busqueda}
-            onChange={e => setBusqueda(e.target.value)}
-          />
+        <div className="row g-3" style={{ alignItems: 'center' }}>
+          {/* Buscador de texto */}
+          <div className="col-md-4">
+            <label className="form-label" style={{ fontSize: '0.74rem' }}>🔍 Buscar</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', opacity: 0.6, fontSize: '0.85rem' }}>🔎</span>
+              <input
+                type="text"
+                className="input-custom"
+                placeholder="ID, ubicación, fecha..."
+                style={{ paddingLeft: 38, marginBottom: 0 }}
+                value={busqueda}
+                onChange={e => setBusqueda(e.target.value)}
+              />
+            </div>
+          </div>
+          
+          {/* Filtro por Nivel */}
+          <div className="col-md-3">
+            <label className="form-label" style={{ fontSize: '0.74rem' }}>⚠️ Nivel de Alerta</label>
+            <select
+              className="input-custom"
+              value={filtroNivel}
+              onChange={e => setFiltroNivel(e.target.value)}
+              style={{ marginBottom: 0 }}
+            >
+              <option value="">Todos</option>
+              <option value="alto">Alto</option>
+              <option value="medio">Medio</option>
+              <option value="bajo">Bajo</option>
+            </select>
+          </div>
+          
+          {/* Filtro por Fecha */}
+          <div className="col-md-3">
+            <label className="form-label" style={{ fontSize: '0.74rem' }}>📅 Fecha</label>
+            <input
+              type="date"
+              className="input-custom"
+              value={filtroFecha}
+              onChange={e => setFiltroFecha(e.target.value)}
+              style={{ marginBottom: 0 }}
+            />
+          </div>
+          
+          {/* Botón Exportar y Contador */}
+          <div className="col-md-2" style={{ display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'flex-end' }}>
+            <button
+              className="btn-principal btn-sm"
+              onClick={exportarCSV}
+              style={{ height: 38, fontSize: '0.8rem', background: 'rgba(16, 185, 129, 0.15)', color: 'var(--color-primario)', border: '1px solid rgba(16, 185, 129, 0.25)' }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'var(--color-primario)'
+                e.currentTarget.style.color = '#fff'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(16, 185, 129, 0.15)'
+                e.currentTarget.style.color = 'var(--color-primario)'
+              }}
+            >
+              📥 Exportar CSV
+            </button>
+            <span style={{ fontSize: '0.72rem', color: 'var(--color-texto-muted)', textAlign: 'center' }}>
+              {datosFiltrados.length} de {datos.length} resultados
+            </span>
+          </div>
         </div>
+        
+        {/* Botón para limpiar filtros */}
+        {(busqueda || filtroNivel || filtroFecha) && (
+          <div style={{ marginTop: 12, textAlign: 'right' }}>
+            <button
+              onClick={() => {
+                setBusqueda('')
+                setFiltroNivel('')
+                setFiltroFecha('')
+              }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--color-acento)',
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                fontWeight: 600,
+                padding: '4px 8px'
+              }}
+            >
+              ✕ Limpiar filtros
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Database Table Container */}

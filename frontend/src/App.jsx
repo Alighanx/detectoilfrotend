@@ -3,6 +3,7 @@
 // ============================================================
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Login     from './pages/Login'
+import Registro from './pages/Registro'
 import Dashboard from './pages/Dashboard'
 
 // useAuth: verifica si hay sesión activa en localStorage
@@ -20,6 +21,9 @@ export default function App() {
     <Routes>
       {/* Ruta pública: Login */}
       <Route path="/" element={<Login />} />
+      
+      {/* Ruta pública: Registro */}
+      <Route path="/registro" element={<Registro />} />
 
       {/* Rutas protegidas: solo accesibles con sesión activa */}
       <Route path="/inicio"           element={<ProtectedRoute><Dashboard seccion="inicio"          /></ProtectedRoute>} />

@@ -12,7 +12,7 @@ export default function Historial() {
   const [selectedRecord, setSelectedRecord] = useState(null)
   
   // Obtener tema actual para ToastContainer
-  const [tema, setTema] = useState(() => {
+  const [tema] = useState(() => {
     const guardado = localStorage.getItem('tema')
     return guardado || 'dark'
   })

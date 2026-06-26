@@ -283,15 +283,14 @@ export default function NuevaDeteccion() {
                       style={{
                         flex: 1,
                         padding: '6px 4px',
-                        border: 'none',
+                        border: dateMode === 'hoy' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid transparent',
                         borderRadius: 6,
                         background: dateMode === 'hoy' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
                         color: dateMode === 'hoy' ? 'var(--color-acento)' : 'var(--color-texto-muted)',
                         fontSize: '0.7rem',
                         fontWeight: 600,
                         cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        border: dateMode === 'hoy' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid transparent'
+                        transition: 'all 0.2s'
                       }}
                     >
                       Hoy
@@ -302,15 +301,14 @@ export default function NuevaDeteccion() {
                       style={{
                         flex: 1,
                         padding: '6px 4px',
-                        border: 'none',
+                        border: dateMode === 'manual' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid transparent',
                         borderRadius: 6,
                         background: dateMode === 'manual' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
                         color: dateMode === 'manual' ? 'var(--color-acento)' : 'var(--color-texto-muted)',
                         fontSize: '0.7rem',
                         fontWeight: 600,
                         cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        border: dateMode === 'manual' ? '1px solid rgba(6, 182, 212, 0.2)' : '1px solid transparent'
+                        transition: 'all 0.2s'
                       }}
                     >
                       Manual

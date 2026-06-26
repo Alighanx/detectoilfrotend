@@ -33,6 +33,10 @@ export default function Topbar() {
   const [notifs, setNotifs] = useState(DEFAULT_NOTIFICATIONS)
   const [modalAbierto, setModalAbierto] = useState(false)
   const [modalTab, setModalTab] = useState('perfil')
+  const [tema, setTema] = useState(() => {
+    const guardado = localStorage.getItem('tema')
+    return guardado || 'dark'
+  })
   
   const panelRef = useRef(null)
   const notifRef = useRef(null)
@@ -43,6 +47,16 @@ export default function Topbar() {
   const rol = localStorage.getItem('rol') || 'usuario'
 
   const unreadCount = notifs.filter(n => n.unread).length
+
+  useEffect(() => {
+    // Aplicar tema al body
+    document.documentElement.setAttribute('data-theme', tema)
+    localStorage.setItem('tema', tema)
+  }, [tema])
+
+  function toggleTema() {
+    setTema(prev => prev === 'dark' ? 'light' : 'dark')
+  }
 
   useEffect(() => {
     function handleClickFuera(event) {
@@ -96,6 +110,17 @@ export default function Topbar() {
 
         {/* Right Side: Navigation utilities */}
         <div className="topbar-right">
+          
+          {/* Theme Toggle Button */}
+          <button 
+            className="topbar-button theme-toggle" 
+            type="button" 
+            onClick={toggleTema}
+            aria-label={`Cambiar a tema ${tema === 'dark' ? 'claro' : 'oscuro'}`}
+            title={`Tema ${tema === 'dark' ? 'oscuro' : 'claro'} - Click para cambiar`}
+          >
+            {tema === 'dark' ? '☀️' : '🌙'}
+          </button>
           
           {/* Scientific Telemetry Search */}
           <div className="topbar-search">

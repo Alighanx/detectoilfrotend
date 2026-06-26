@@ -39,7 +39,6 @@ export default function Inicio() {
   })
   const [actividad, setActividad] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
 
   // Variables climatológicas simuladas tipo SENAMHI
   const [tempAgua, setTempAgua] = useState(24.5)
@@ -71,8 +70,7 @@ export default function Inicio() {
           setActividad(dataAct.data)
         }
       } catch (err) {
-        console.error(err)
-        setError('Error al conectar con la base de datos de monitoreo.')
+        console.error('Error al cargar datos:', err)
       } finally {
         setLoading(false)
       }

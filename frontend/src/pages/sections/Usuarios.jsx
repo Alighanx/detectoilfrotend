@@ -187,7 +187,7 @@ export default function Usuarios() {
         {/* Tabla de Usuarios Registrados */}
         <div className="col-md-7">
           <div className="card-custom" style={{ minHeight: '380px', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ color: '#fff', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
+            <h5 style={{ color: 'var(--color-texto)', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
               👥 Cuentas de Operadores Registrados
             </h5>
             
@@ -233,11 +233,11 @@ export default function Usuarios() {
                               }}>
                                 {user.nombre.charAt(0).toUpperCase()}
                               </div>
-                              <strong style={{ color: '#fff' }}>{user.nombre}</strong>
+                              <strong style={{ color: 'var(--color-texto)' }}>{user.nombre}</strong>
                             </div>
                           </td>
                           <td>
-                            <code style={{ background: 'rgba(255,255,255,0.06)', padding: '3px 8px', borderRadius: 6, color: 'var(--color-acento)', fontSize: '0.82rem', fontFamily: 'monospace' }}>
+                            <code style={{ background: 'var(--border-glass)', padding: '3px 8px', borderRadius: 6, color: 'var(--color-acento)', fontSize: '0.82rem', fontFamily: 'monospace' }}>
                               @{user.usuario}
                             </code>
                           </td>
@@ -249,12 +249,12 @@ export default function Usuarios() {
                               className="btn-principal btn-sm"
                               style={{
                                 background: user.usuario === 'admin' || user.usuario === usuarioLogueado 
-                                  ? 'rgba(255, 255, 255, 0.02)' 
+                                  ? 'var(--border-glass)' 
                                   : 'rgba(239, 68, 68, 0.12)',
                                 color: user.usuario === 'admin' || user.usuario === usuarioLogueado 
-                                  ? 'rgba(255,255,255,0.15)' 
+                                  ? 'var(--color-texto-subtle)' 
                                   : 'var(--color-peligro)',
-                                border: '1px solid ' + (user.usuario === 'admin' || user.usuario === usuarioLogueado ? 'rgba(255,255,255,0.04)' : 'rgba(239,68,68,0.2)'),
+                                border: '1px solid ' + (user.usuario === 'admin' || user.usuario === usuarioLogueado ? 'var(--border-glass)' : 'rgba(239,68,68,0.2)'),
                                 cursor: user.usuario === 'admin' || user.usuario === usuarioLogueado ? 'not-allowed' : 'pointer',
                                 boxShadow: 'none'
                               }}
@@ -290,7 +290,7 @@ export default function Usuarios() {
         {/* Registro de Cuentas */}
         <div className="col-md-5" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div className="card-custom" style={{ marginBottom: 0 }}>
-            <h5 style={{ color: '#fff', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
+            <h5 style={{ color: 'var(--color-texto)', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
               ➕ Crear Credencial de Red
             </h5>
             
@@ -347,7 +347,7 @@ export default function Usuarios() {
 
           {/* Restablecer Contraseña (Admin) */}
           <div className="card-custom">
-            <h5 style={{ color: '#fff', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
+            <h5 style={{ color: 'var(--color-texto)', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
               🔑 Restablecer Contraseña
             </h5>
             <form onSubmit={handleResetPassword} style={{ display: 'grid', gap: 16 }}>
@@ -357,7 +357,7 @@ export default function Usuarios() {
                   className="input-custom"
                   value={resetUser}
                   onChange={e => setResetUser(e.target.value)}
-                  style={{ marginBottom: 0, background: 'rgba(9, 18, 33, 0.95)', color: '#fff', outline: 'none' }}
+                  style={{ marginBottom: 0, outline: 'none' }}
                   required
                 >
                   <option value="">Selecciona un usuario...</option>

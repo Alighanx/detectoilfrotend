@@ -155,7 +155,7 @@ export default function Inicio() {
           padding: '10px 18px',
           borderRadius: 12,
           fontSize: '0.86rem',
-          color: '#e2e8f0',
+          color: 'var(--color-texto)',
           fontWeight: 600
         }}>
           Estación: <strong style={{ color: 'var(--color-acento)' }}>🛰️ Red de Monitoreo Activa</strong>
@@ -166,7 +166,7 @@ export default function Inicio() {
       <div 
         className="card-custom" 
         style={{
-          background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, rgba(9, 18, 33, 0.6) 100%)',
+          background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, var(--color-card) 100%)',
           borderLeft: '4px solid var(--color-primario)',
           padding: '20px 24px',
           marginBottom: 28,
@@ -178,7 +178,7 @@ export default function Inicio() {
         }}
       >
         <div>
-          <h4 style={{ margin: 0, color: '#fff', fontSize: '1.1rem', fontWeight: 700 }}>Conexión Establecida, {nombreUsuario}</h4>
+          <h4 style={{ margin: 0, color: 'var(--color-texto)', fontSize: '1.1rem', fontWeight: 700 }}>Conexión Establecida, {nombreUsuario}</h4>
           <p style={{ margin: '4px 0 0', color: 'var(--color-texto-muted)', fontSize: '0.84rem' }}>
             Último barrido orbital de Sentinel-2 sincronizado y almacenado en base de datos.
           </p>
@@ -224,7 +224,7 @@ export default function Inicio() {
         {/* Monitoreo Ambiental Estilo SENAMHI */}
         <div className="col-md-6">
           <div className="card-custom" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ marginBottom: 12, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, fontSize: '1.05rem', fontWeight: 700 }}>
+            <h5 style={{ marginBottom: 12, color: 'var(--color-texto)', display: 'flex', alignItems: 'center', gap: 10, fontSize: '1.05rem', fontWeight: 700 }}>
               <span style={{ color: 'var(--color-acento)' }}>🌡️</span> Variables Ambientales en Tiempo Real
             </h5>
             <p style={{ fontSize: '0.82rem', color: 'var(--color-texto-muted)', marginBottom: 24 }}>
@@ -237,13 +237,13 @@ export default function Inicio() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <div>
-                    <span style={{ color: '#f1f5f9', fontSize: '0.86rem', fontWeight: 600 }}>Nivel Hidrométrico</span>
+                    <span style={{ color: 'var(--color-texto)', fontSize: '0.86rem', fontWeight: 600 }}>Nivel Hidrométrico</span>
                     <span style={{ fontSize: '0.74rem', color: 'var(--color-texto-muted)', display: 'block' }}>Rango óptimo: 100m - 120m</span>
                   </div>
-                  <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{nivelRio} m</strong>
+                  <strong style={{ fontSize: '1.1rem', color: 'var(--color-texto)' }}>{nivelRio} m</strong>
                 </div>
                 {/* Visual bar range */}
-                <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{ height: '6px', background: 'var(--border-glass)', borderRadius: 99, overflow: 'hidden' }}>
                   <div style={{ height: '100%', width: `${Math.min(100, (nivelRio / 130) * 100)}%`, background: 'linear-gradient(90deg, #10b981, #06b6d4)', borderRadius: 99 }} />
                 </div>
               </div>
@@ -252,12 +252,12 @@ export default function Inicio() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <div>
-                    <span style={{ color: '#f1f5f9', fontSize: '0.86rem', fontWeight: 600 }}>Temperatura Superficial</span>
+                    <span style={{ color: 'var(--color-texto)', fontSize: '0.86rem', fontWeight: 600 }}>Temperatura Superficial</span>
                     <span style={{ fontSize: '0.74rem', color: 'var(--color-texto-muted)', display: 'block' }}>Sensor subacuático calibrado</span>
                   </div>
-                  <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{tempAgua} °C</strong>
+                  <strong style={{ fontSize: '1.1rem', color: 'var(--color-texto)' }}>{tempAgua} °C</strong>
                 </div>
-                <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{ height: '6px', background: 'var(--border-glass)', borderRadius: 99, overflow: 'hidden' }}>
                   <div style={{ height: '100%', width: `${Math.min(100, (tempAgua / 35) * 100)}%`, background: 'linear-gradient(90deg, #10b981, #f59e0b)', borderRadius: 99 }} />
                 </div>
               </div>
@@ -266,20 +266,20 @@ export default function Inicio() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <div>
-                    <span style={{ color: '#f1f5f9', fontSize: '0.86rem', fontWeight: 600 }}>Humedad Relativa</span>
+                    <span style={{ color: 'var(--color-texto)', fontSize: '0.86rem', fontWeight: 600 }}>Humedad Relativa</span>
                     <span style={{ fontSize: '0.74rem', color: 'var(--color-texto-muted)', display: 'block' }}>Sensor higrométrico ambiental</span>
                   </div>
-                  <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{humedad}%</strong>
+                  <strong style={{ fontSize: '1.1rem', color: 'var(--color-texto)' }}>{humedad}%</strong>
                 </div>
-                <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{ height: '6px', background: 'var(--border-glass)', borderRadius: 99, overflow: 'hidden' }}>
                   <div style={{ height: '100%', width: `${humedad}%`, background: 'linear-gradient(90deg, #06b6d4, #6366f1)', borderRadius: 99 }} />
                 </div>
               </div>
 
               {/* Variable 4: Calidad general */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '12px 16px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.04)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--color-card)', padding: '12px 16px', borderRadius: 12, border: '1px solid var(--border-glass)' }}>
                 <div>
-                  <span style={{ color: '#f1f5f9', fontSize: '0.86rem', fontWeight: 600 }}>Estado Sanitario del Ecosistema</span>
+                  <span style={{ color: 'var(--color-texto)', fontSize: '0.86rem', fontWeight: 600 }}>Estado Sanitario del Ecosistema</span>
                   <span style={{ fontSize: '0.74rem', color: 'var(--color-texto-muted)', display: 'block' }}>Monitoreo integrado por IA</span>
                 </div>
                 {stats.alertas_criticas > 0 ? (
@@ -296,7 +296,7 @@ export default function Inicio() {
         {/* Tabla de actividad reciente */}
         <div className="col-md-6">
           <div className="card-custom" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ marginBottom: 12, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, fontSize: '1.05rem', fontWeight: 700 }}>
+            <h5 style={{ marginBottom: 12, color: 'var(--color-texto)', display: 'flex', alignItems: 'center', gap: 10, fontSize: '1.05rem', fontWeight: 700 }}>
               <span style={{ color: 'var(--color-acento)' }}>📋</span> Registros Recientes en Base de Datos
             </h5>
             <p style={{ fontSize: '0.82rem', color: 'var(--color-texto-muted)', marginBottom: 20 }}>
@@ -329,7 +329,7 @@ export default function Inicio() {
                     {actividad.map((a, i) => (
                       <tr key={i}>
                         <td style={{ fontWeight: 500 }}>{a.fecha}</td>
-                        <td style={{ color: '#fff', fontWeight: 600 }}>{a.lugar}</td>
+                        <td style={{ color: 'var(--color-texto)', fontWeight: 600 }}>{a.lugar}</td>
                         <td>{a.area}</td>
                         <td>
                           <span className={`badge-estado badge-${a.nivel}`}>
@@ -354,7 +354,7 @@ export default function Inicio() {
       <div className="row g-4 mt-2" style={{ marginBottom: '2rem' }}>
         <div className="col-md-6">
           <div className="card-custom" style={{ height: '100%', maxHeight: '420px', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ marginBottom: 16, color: '#fff', fontSize: '1.05rem', fontWeight: 700, flexShrink: 0 }}>
+            <h5 style={{ marginBottom: 16, color: 'var(--color-texto)', fontSize: '1.05rem', fontWeight: 700, flexShrink: 0 }}>
               🥧 Distribución de Derrames vs. No Derrames
             </h5>
             <div style={{ flex: 1, minHeight: '280px', maxHeight: '340px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
@@ -382,7 +382,7 @@ export default function Inicio() {
                       legend: {
                         position: 'bottom',
                         labels: {
-                          color: '#e2e8f0',
+                          color: '#64748b',
                           font: { size: 12 }
                         }
                       },
@@ -409,7 +409,7 @@ export default function Inicio() {
 
         <div className="col-md-6">
           <div className="card-custom" style={{ height: '100%', maxHeight: '420px', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ marginBottom: 16, color: '#fff', fontSize: '1.05rem', fontWeight: 700, flexShrink: 0 }}>
+            <h5 style={{ marginBottom: 16, color: 'var(--color-texto)', fontSize: '1.05rem', fontWeight: 700, flexShrink: 0 }}>
               📊 Distribución por Nivel de Alerta
             </h5>
             <div style={{ flex: 1, minHeight: '280px', maxHeight: '340px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
@@ -453,15 +453,15 @@ export default function Inicio() {
                         beginAtZero: true,
                         ticks: {
                           stepSize: 1,
-                          color: '#94a3b8'
+                          color: '#64748b'
                         },
                         grid: {
-                          color: 'rgba(255, 255, 255, 0.05)'
+                          color: 'rgba(100, 116, 139, 0.12)'
                         }
                       },
                       x: {
                         ticks: {
-                          color: '#94a3b8'
+                          color: '#64748b'
                         },
                         grid: {
                           display: false

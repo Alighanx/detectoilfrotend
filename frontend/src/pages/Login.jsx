@@ -127,12 +127,32 @@ export default function Login() {
         
         {/* Brand details */}
         <div className="login-brand">
-          <div className="login-brand-mark" style={{ background: 'linear-gradient(135deg, var(--color-primario), var(--color-acento))' }}>
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#fff' }}>
-              <circle cx="12" cy="12" r="3" />
-              <path d="M12 2v4m0 12v4M2 12h4m12 0h4" />
-              <circle cx="12" cy="12" r="10" strokeOpacity="0.3" />
+          <div className="login-brand-mark" style={{ background: 'linear-gradient(135deg, var(--color-primario), var(--color-acento))', position: 'relative', overflow: 'hidden' }}>
+            {/* Satellite/Scanner SVG Icon for Login */}
+            <svg viewBox="0 0 64 64" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
+              {/* Central satellite body */}
+              <circle cx="32" cy="32" r="10" stroke="white" strokeWidth="2.5" fill="rgba(255,255,255,0.1)"/>
+              <circle cx="32" cy="32" r="4" fill="white"/>
+              {/* Solar panels */}
+              <rect x="14" y="28" width="12" height="8" rx="1.5" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.15)"/>
+              <rect x="38" y="28" width="12" height="8" rx="1.5" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.15)"/>
+              {/* Antenna */}
+              <path d="M32 18V12" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+              <circle cx="32" cy="10" r="3" stroke="white" strokeWidth="2" fill="none"/>
+              {/* Signal waves */}
+              <path d="M44 14c2-2 4-3 6-3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.6">
+                <animate attributeName="d" values="M44 14c2-2 4-3 6-3;M46 14c3-2 5-3 8-3" dur="1.5s" repeatCount="indefinite"/>
+                <animate attributeName="stroke-opacity" values="0.6;0.2" dur="1.5s" repeatCount="indefinite"/>
+              </path>
+              <path d="M47 18c3-2 5-3 8-3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.4">
+                <animate attributeName="d" values="M47 18c3-2 5-3 8-3;M49 18c4-2 6-3 10-3" dur="1.5s" begin="0.3s" repeatCount="indefinite"/>
+                <animate attributeName="stroke-opacity" values="0.4;0.1" dur="1.5s" begin="0.3s" repeatCount="indefinite"/>
+              </path>
+              {/* Orbit ring */}
+              <ellipse cx="32" cy="32" rx="24" ry="24" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="none" transform="rotate(-30 32 32)"/>
             </svg>
+            {/* Pulse effect */}
+            <div style={{ position: 'absolute', inset: 0, borderRadius: '16px', animation: 'pulseGlow 2s ease-in-out infinite', background: 'radial-gradient(circle, rgba(34,211,238,0.3) 0%, transparent 70%)' }}/>
           </div>
           <div>
             <div className="login-title">DetectOil IA</div>

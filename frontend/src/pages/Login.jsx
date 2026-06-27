@@ -127,11 +127,17 @@ export default function Login() {
         
         {/* Brand details */}
         <div className="login-brand">
-          <div className="login-brand-mark">🛰️</div>
+          <div className="login-brand-mark" style={{ background: 'linear-gradient(135deg, var(--color-primario), var(--color-acento))' }}>
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#fff' }}>
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2v4m0 12v4M2 12h4m12 0h4" />
+              <circle cx="12" cy="12" r="10" strokeOpacity="0.3" />
+            </svg>
+          </div>
           <div>
             <div className="login-title">DetectOil IA</div>
             <div className="login-subtitle">
-              Estación de Análisis Espectral e Hidrocarburos.
+              Plataforma de Detección Temprana de Hidrocarburos
             </div>
           </div>
         </div>
@@ -249,37 +255,42 @@ export default function Login() {
         {/* Demo box readouts */}
         <div style={{
           marginTop: 28,
-          padding: '14px 18px',
-          background: 'rgba(6, 182, 212, 0.05)',
-          border: '1px solid rgba(6, 182, 212, 0.15)',
+          padding: '16px 20px',
+          background: 'rgba(6, 182, 212, 0.06)',
+          border: '1px solid rgba(6, 182, 212, 0.18)',
           borderRadius: 14,
           textAlign: 'center',
-          boxShadow: 'none'
+          boxShadow: '0 4px 12px rgba(6, 182, 212, 0.08)'
         }}>
-          <span style={{ fontSize: '0.76rem', color: 'var(--color-acento)', display: 'block', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
-            🛰️ Credenciales de Acceso:
+          <span style={{ fontSize: '0.78rem', color: 'var(--color-acento)', display: 'block', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+            🔐 Credenciales de Demostración
           </span>
-          <span style={{ fontSize: '0.86rem', color: '#fff', fontWeight: 600 }}>
-            Admin: <code style={{ color: '#fff', background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: 4, fontFamily: 'monospace' }}>admin / admin123</code>
-          </span>
-          <span style={{ fontSize: '0.76rem', color: 'var(--color-texto-muted)', display: 'block', marginTop: 6 }}>
-            ¿No tienes cuenta?{' '}
-            <button 
-              onClick={() => navigate('/registro')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--color-acento)',
-                cursor: 'pointer',
-                fontWeight: 600,
-                textDecoration: 'underline',
-                padding: 0,
-                font: 'inherit'
-              }}
-            >
-              Regístrate aquí
-            </button>
-          </span>
+          <div style={{ fontSize: '0.88rem', color: '#e2e8f0', fontWeight: 500, marginBottom: 4 }}>
+            Usuario Admin: <code style={{ color: '#fff', background: 'rgba(6, 182, 212, 0.15)', padding: '3px 8px', borderRadius: 6, fontFamily: 'monospace', border: '1px solid rgba(6, 182, 212, 0.2)' }}>admin</code>
+          </div>
+          <div style={{ fontSize: '0.88rem', color: '#e2e8f0', fontWeight: 500, marginBottom: 10 }}>
+            Contraseña: <code style={{ color: '#fff', background: 'rgba(6, 182, 212, 0.15)', padding: '3px 8px', borderRadius: 6, fontFamily: 'monospace', border: '1px solid rgba(6, 182, 212, 0.2)' }}>admin123</code>
+          </div>
+          <div style={{ borderTop: '1px solid rgba(6, 182, 212, 0.15)', paddingTop: 10, marginTop: 8 }}>
+            <span style={{ fontSize: '0.80rem', color: 'var(--color-texto-muted)' }}>
+              ¿Nuevo en el sistema?{' '}
+              <button 
+                onClick={() => navigate('/registro')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--color-primario)',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  padding: 0,
+                  font: 'inherit'
+                }}
+              >
+                Crear cuenta de operador →
+              </button>
+            </span>
+          </div>
         </div>
       </div>
 

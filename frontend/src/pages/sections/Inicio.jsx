@@ -158,7 +158,7 @@ export default function Inicio() {
           color: '#e2e8f0',
           fontWeight: 600
         }}>
-          Estación: <strong style={{ color: 'var(--color-acento)' }}>🛰️ Loreto-Napo Active</strong>
+          Estación: <strong style={{ color: 'var(--color-acento)' }}>🛰️ Red de Monitoreo Activa</strong>
         </div>
       </div>
 
@@ -225,10 +225,10 @@ export default function Inicio() {
         <div className="col-md-6">
           <div className="card-custom" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <h5 style={{ marginBottom: 12, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, fontSize: '1.05rem', fontWeight: 700 }}>
-              <span style={{ color: 'var(--color-acento)' }}>🌡️</span> Variables Auxiliares (Amazonía)
+              <span style={{ color: 'var(--color-acento)' }}>🌡️</span> Variables Ambientales en Tiempo Real
             </h5>
             <p style={{ fontSize: '0.82rem', color: 'var(--color-texto-muted)', marginBottom: 24 }}>
-              Telemetría local en tiempo real de estaciones hidrométricas asociadas:
+              Telemetría de estaciones hidrométricas y sensores satelitales integrados:
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20, flex: 1, justifyContent: 'center' }}>
@@ -237,7 +237,7 @@ export default function Inicio() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <div>
-                    <span style={{ color: '#f1f5f9', fontSize: '0.86rem', fontWeight: 600 }}>Nivel de Caudal (Río Napo)</span>
+                    <span style={{ color: '#f1f5f9', fontSize: '0.86rem', fontWeight: 600 }}>Nivel Hidrométrico</span>
                     <span style={{ fontSize: '0.74rem', color: 'var(--color-texto-muted)', display: 'block' }}>Rango óptimo: 100m - 120m</span>
                   </div>
                   <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{nivelRio} m</strong>

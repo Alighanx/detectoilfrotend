@@ -149,11 +149,16 @@ export default function Registro() {
           
           {/* Brand details */}
           <div className="login-brand">
-            <div className="login-brand-mark">🛰️</div>
+            <div className="login-brand-mark" style={{ background: 'linear-gradient(135deg, var(--color-primario), var(--color-acento))' }}>
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#fff' }}>
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
             <div>
               <div className="login-title">Crear Cuenta</div>
               <div className="login-subtitle">
-                Registro de nuevos operadores del sistema.
+                Registro de nuevos operadores del sistema
               </div>
             </div>
           </div>

@@ -1,1 +1,44 @@
-(frontend/src/pages/sections/Inicio.jsx is a source file, and there are no build artifacts, dependencies, or temp files in the changes, so no .gitignore rules are needed)
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+*.js.map
+*.css.map
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+htmlcov/
+coverage/
+.mypy_cache/
+.pytest_cache/
+.tox/
+.eggs/
+*.egg-info/
+*.egg
+
+# System
+.DS_Store
+Thumbs.db

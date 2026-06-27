@@ -192,8 +192,16 @@ export default function Usuarios() {
             </h5>
             
             {loading ? (
-              <div style={{ margin: 'auto 0', textAlign: 'center', color: 'var(--color-texto-muted)' }}>
-                <span>⏳ Obteniendo registros de usuarios...</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="skeleton-table-row">
+                    <div className="skeleton skeleton-avatar" style={{ width: '36px', height: '36px' }} />
+                    <div className="skeleton skeleton-table-cell" style={{ width: '25%' }} />
+                    <div className="skeleton skeleton-table-cell" style={{ width: '30%' }} />
+                    <div className="skeleton skeleton-table-cell" style={{ width: '25%' }} />
+                    <div className="skeleton skeleton-text short" />
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="tabla-custom-wrapper" style={{ flex: 1 }}>

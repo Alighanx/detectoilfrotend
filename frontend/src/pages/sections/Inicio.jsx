@@ -351,13 +351,13 @@ export default function Inicio() {
       </div>
 
       {/* Sección de Gráficos Estadísticos */}
-      <div className="row g-4 mt-2">
+      <div className="row g-4 mt-2" style={{ marginBottom: '2rem' }}>
         <div className="col-md-6">
-          <div className="card-custom" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ marginBottom: 16, color: '#fff', fontSize: '1.05rem', fontWeight: 700 }}>
+          <div className="card-custom" style={{ height: '100%', maxHeight: '420px', display: 'flex', flexDirection: 'column' }}>
+            <h5 style={{ marginBottom: 16, color: '#fff', fontSize: '1.05rem', fontWeight: 700, flexShrink: 0 }}>
               🥧 Distribución de Derrames vs. No Derrames
             </h5>
-            <div style={{ flex: 1, minHeight: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ flex: 1, minHeight: '280px', maxHeight: '340px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               {stats.total_analisis > 0 ? (
                 <Pie
                   data={{
@@ -408,11 +408,11 @@ export default function Inicio() {
         </div>
 
         <div className="col-md-6">
-          <div className="card-custom" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ marginBottom: 16, color: '#fff', fontSize: '1.05rem', fontWeight: 700 }}>
+          <div className="card-custom" style={{ height: '100%', maxHeight: '420px', display: 'flex', flexDirection: 'column' }}>
+            <h5 style={{ marginBottom: 16, color: '#fff', fontSize: '1.05rem', fontWeight: 700, flexShrink: 0 }}>
               📊 Distribución por Nivel de Alerta
             </h5>
-            <div style={{ flex: 1, minHeight: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ flex: 1, minHeight: '280px', maxHeight: '340px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               {actividad.length > 0 ? (
                 <Bar
                   data={{

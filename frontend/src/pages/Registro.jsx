@@ -254,7 +254,7 @@ export default function Registro() {
                     transform: 'translateY(-50%)',
                     background: 'transparent',
                     border: 'none',
-                    color: 'rgba(255,255,255,0.45)',
+                    color: 'var(--icon-color-default, rgba(15, 23, 42, 0.5))',
                     cursor: 'pointer',
                     padding: 5,
                     display: 'flex',
@@ -263,7 +263,7 @@ export default function Registro() {
                     transition: 'color 0.2s'
                   }}
                   onMouseEnter={e => e.currentTarget.style.color = 'var(--color-acento)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--icon-color-default, rgba(15, 23, 42, 0.5))'}
                 >
                   {verClave ? (
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

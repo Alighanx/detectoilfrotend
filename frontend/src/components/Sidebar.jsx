@@ -97,15 +97,53 @@ export default function Sidebar({ seccionActiva, isOpen, onClose }) {
       <nav className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
         {/* Header con botón de cierre en móvil */}
         <div className="sidebar-header">
-          {/* Radar Logo / Brand */}
+          {/* Radar Logo / Brand - Custom SVG with IA + Oil theme */}
           <div className="sidebar-brand">
-            <div className="sidebar-brand-icon" style={{ position: 'relative' }}>
-              <span style={{ fontSize: '1rem', zIndex: 2 }}>🛰️</span>
-              {/* Radar ripple scanner effect */}
-              <div className="radar-ping" />
+            <div className="sidebar-brand-icon" style={{ position: 'relative', width: 44, height: 44 }}>
+              <svg viewBox="0 0 100 100" width="44" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#0ea5e9" />
+                    <stop offset="100%" stopColor="#22d3ee" />
+                  </linearGradient>
+                </defs>
+                
+                {/* Anillo exterior con efecto scanner */}
+                <circle 
+                  cx="50" 
+                  cy="50" 
+                  r="42" 
+                  stroke="url(#logoGradient)" 
+                  strokeWidth="3" 
+                  strokeDasharray="4 4"
+                  opacity="0.8"
+                >
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 50 50"
+                    to="360 50 50"
+                    dur="8s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+                
+                {/* La Gota de petróleo - Path dibujado manualmente */}
+                <path 
+                  d="M50 20 C50 20 30 45 30 60 A20 20 0 0 0 70 60 C70 45 50 20 50 20 Z" 
+                  fill="url(#logoGradient)"
+                  opacity="0.9"
+                />
+                
+                {/* El "Ojo" IA dentro de la gota */}
+                <circle cx="50" cy="55" r="12" fill="#0f172a" opacity="0.8" />
+                <circle cx="50" cy="55" r="5" fill="#22d3ee">
+                  <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+                </circle>
+              </svg>
             </div>
             <div className="sidebar-brand-text">
-              <span className="sidebar-brand-title">DetectOil IA</span>
+              <span className="sidebar-brand-title" style={{ background: 'linear-gradient(90deg, #0ea5e9, #22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>DetectOil</span>
               <small style={{ color: 'var(--color-acento)', fontWeight: 700, fontSize: '0.62rem', letterSpacing: '0.1em' }}>
                 CONSOLA SATELITAL
               </small>
@@ -167,21 +205,6 @@ export default function Sidebar({ seccionActiva, isOpen, onClose }) {
 
         {/* Estilos dinámicos para los elementos de navegación */}
         <style>{`
-          .radar-ping {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 1px solid var(--color-acento);
-            animation: radarScan 2.5s infinite linear;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1;
-          }
-          @keyframes radarScan {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(2.2); opacity: 0; }
-          }
           .sidebar-link:hover .nav-icon-wrapper {
             opacity: 1 !important;
             color: var(--color-acento);
@@ -196,6 +219,10 @@ export default function Sidebar({ seccionActiva, isOpen, onClose }) {
             z-index: 149;
             opacity: 0;
             animation: fadeIn 0.3s ease forwards;
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
           }
           .sidebar-header {
             display: flex;

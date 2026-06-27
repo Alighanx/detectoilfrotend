@@ -20,11 +20,149 @@ const EQUIPO = [
   { emoji: '👨‍🎨', nombre: 'Lenin Allister Alvarez Jara', rol: 'Diseño UX/UI Científico' },
 ]
 
+const ESTADO_PROYECTO = {
+  version: '2.0.0',
+  ultimoUpdate: new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
+  estado: 'Producción',
+  caracteristicas: [
+    { icono: '🔐', titulo: 'Autenticación Segura', desc: 'Login y registro con validación y persistencia en localStorage' },
+    { icono: '🎨', titulo: 'Temas Dinámicos', desc: 'Modo claro/oscuro con diseño profesional y paleta única' },
+    { icono: '📊', titulo: 'Dashboard Interactivo', desc: 'Gráficos estadísticos con Chart.js y datos en tiempo real' },
+    { icono: '🔔', titulo: 'Notificaciones Toast', desc: 'Feedback visual elegante sin alerts nativos' },
+    { icono: '📱', titulo: '100% Responsivo', desc: 'Adaptable a móviles, tablets y desktop con menú hamburguesa' },
+    { icono: '📥', titulo: 'Exportación CSV', desc: 'Descarga de reportes históricos filtrados' },
+    { icono: '🦴', titulo: 'Skeleton Loading', desc: 'Animaciones de carga profesionales mientras se obtienen datos' },
+    { icono: '✨', titulo: 'UI Premium', desc: 'Micro-interacciones, gradientes y efectos visuales únicos' },
+  ]
+}
+
 export default function Informacion() {
   return (
     <>
       <h1 className="seccion-titulo">Información del Sistema</h1>
-      <p className="seccion-subtitulo">Detalles de la arquitectura técnica, modelo de IA y equipo de desarrollo</p>
+      <p className="seccion-subtitulo">Detalles de la arquitectura técnica, modelo de IA, equipo de desarrollo y estado actual del proyecto</p>
+
+      {/* Estado del Proyecto - NUEVO */}
+      <div className="col-12 mb-4">
+        <div 
+          className="card-custom" 
+          style={{
+            background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08) 0%, rgba(14, 165, 233, 0.05) 100%)',
+            border: '1px solid rgba(34, 211, 238, 0.2)',
+            padding: '28px 32px',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          {/* Decorative glow */}
+          <div style={{
+            position: 'absolute',
+            top: '-50%',
+            right: '-10%',
+            width: '300px',
+            height: '300px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%)',
+            pointerEvents: 'none'
+          }} />
+          
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', alignItems: 'center', marginBottom: '24px' }}>
+              <div style={{ flex: '1', minWidth: '250px' }}>
+                <h5 style={{ 
+                  color: 'var(--color-acento)', 
+                  marginBottom: 8, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 12, 
+                  fontSize: '1.3rem', 
+                  fontWeight: 800,
+                  letterSpacing: '-0.02em'
+                }}>
+                  <span style={{ 
+                    display: 'inline-flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    width: '42px', 
+                    height: '42px',
+                    borderRadius: '12px',
+                    background: 'linear-gradient(135deg, var(--color-acento) 0%, #22d3ee 100%)',
+                    color: '#0f172a',
+                    fontSize: '1.4rem'
+                  }}>
+                    🚀
+                  </span>
+                  Estado del Proyecto v{ESTADO_PROYECTO.version}
+                </h5>
+                <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '12px' }}>
+                  <span style={{
+                    padding: '6px 14px',
+                    borderRadius: '20px',
+                    background: 'rgba(34, 197, 94, 0.15)',
+                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                    color: '#22c55e',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 2s infinite' }}></span>
+                    {ESTADO_PROYECTO.estado}
+                  </span>
+                  <span style={{
+                    padding: '6px 14px',
+                    borderRadius: '20px',
+                    background: 'rgba(148, 163, 184, 0.1)',
+                    border: '1px solid rgba(148, 163, 184, 0.2)',
+                    color: '#94a3b8',
+                    fontSize: '0.82rem',
+                    fontWeight: 600
+                  }}>
+                    📅 Actualizado: {ESTADO_PROYECTO.ultimoUpdate}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Características Grid */}
+            <div className="row g-3 mt-2">
+              {ESTADO_PROYECTO.caracteristicas.map((feat, idx) => (
+                <div className="col-md-3 col-sm-4 col-6" key={idx}>
+                  <div style={{
+                    padding: '18px 14px',
+                    borderRadius: '14px',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.06)',
+                    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    textAlign: 'center',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)'
+                    e.currentTarget.style.background = 'rgba(34, 211, 238, 0.06)'
+                    e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.25)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)'
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)'
+                  }}
+                  >
+                    <div style={{ fontSize: '2rem', marginBottom: '10px', filter: 'drop-shadow(0 4px 8px rgba(34, 211, 238, 0.2))' }}>{feat.icono}</div>
+                    <strong style={{ color: '#fff', fontSize: '0.78rem', fontWeight: 700, marginBottom: '4px', letterSpacing: '0.02em' }}>{feat.titulo}</strong>
+                    <span style={{ color: 'var(--color-texto-muted)', fontSize: '0.68rem', lineHeight: 1.4, textAlign: 'center' }}>{feat.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="row g-4">
 

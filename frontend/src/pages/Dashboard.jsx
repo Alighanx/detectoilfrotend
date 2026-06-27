@@ -1,7 +1,5 @@
-// ============================================================
-// Dashboard.jsx — Layout principal: Sidebar + Sección activa
-// Props: seccion (string) — indica qué sección mostrar
-// ============================================================
+import { useState } from 'react'
+import { Menu } from 'lucide-react'
 import { useLocation } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import Topbar from '../components/Topbar'
@@ -22,12 +20,26 @@ const SECCIONES = {
 
 export default function Dashboard({ seccion }) {
   const location = useLocation()  // Para saber la URL actual (resalta el ítem activo)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <div className="dashboard-layout">
-      <Sidebar seccionActiva={location.pathname} />
+      <Sidebar 
+        seccionActiva={location.pathname} 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       <div className="dashboard-wrapper">
+        {/* Botón hamburguesa para móvil */}
+        <button 
+          className="mobile-menu-btn"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Abrir menú"
+        >
+          <Menu size={24} />
+        </button>
+        
         <Topbar />
 
         <main className="main-content">

@@ -215,7 +215,7 @@ export default function Login() {
                   transform: 'translateY(-50%)',
                   background: 'transparent',
                   border: 'none',
-                  color: 'rgba(255,255,255,0.45)',
+                  color: 'var(--icon-color-default, rgba(15, 23, 42, 0.5))',
                   cursor: 'pointer',
                   padding: 5,
                   display: 'flex',
@@ -224,7 +224,7 @@ export default function Login() {
                   transition: 'color 0.2s'
                 }}
                 onMouseEnter={e => e.currentTarget.style.color = 'var(--color-acento)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--icon-color-default, rgba(15, 23, 42, 0.5))'}
               >
                 {verClave ? (
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -285,11 +285,11 @@ export default function Login() {
           <span style={{ fontSize: '0.78rem', color: 'var(--color-acento)', display: 'block', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
             🔐 Credenciales de Demostración
           </span>
-          <div style={{ fontSize: '0.88rem', color: '#e2e8f0', fontWeight: 500, marginBottom: 4 }}>
-            Usuario Admin: <code style={{ color: '#fff', background: 'rgba(6, 182, 212, 0.15)', padding: '3px 8px', borderRadius: 6, fontFamily: 'monospace', border: '1px solid rgba(6, 182, 212, 0.2)' }}>admin</code>
+          <div style={{ fontSize: '0.88rem', color: 'var(--color-texto)', fontWeight: 500, marginBottom: 4 }}>
+            Usuario Admin: <code style={{ color: 'var(--color-texto)', background: 'rgba(6, 182, 212, 0.1)', padding: '3px 8px', borderRadius: 6, fontFamily: 'monospace', border: '1px solid rgba(6, 182, 212, 0.2)' }}>admin</code>
           </div>
-          <div style={{ fontSize: '0.88rem', color: '#e2e8f0', fontWeight: 500, marginBottom: 10 }}>
-            Contraseña: <code style={{ color: '#fff', background: 'rgba(6, 182, 212, 0.15)', padding: '3px 8px', borderRadius: 6, fontFamily: 'monospace', border: '1px solid rgba(6, 182, 212, 0.2)' }}>admin123</code>
+          <div style={{ fontSize: '0.88rem', color: 'var(--color-texto)', fontWeight: 500, marginBottom: 10 }}>
+            Contraseña: <code style={{ color: 'var(--color-texto)', background: 'rgba(6, 182, 212, 0.1)', padding: '3px 8px', borderRadius: 6, fontFamily: 'monospace', border: '1px solid rgba(6, 182, 212, 0.2)' }}>admin123</code>
           </div>
           <div style={{ borderTop: '1px solid rgba(6, 182, 212, 0.15)', paddingTop: 10, marginTop: 8 }}>
             <span style={{ fontSize: '0.80rem', color: 'var(--color-texto-muted)' }}>

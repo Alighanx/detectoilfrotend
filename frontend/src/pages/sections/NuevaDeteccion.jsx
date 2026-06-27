@@ -176,7 +176,7 @@ export default function NuevaDeteccion() {
         {/* Columna Izquierda: Input y Carga */}
         <div className="col-md-6">
           <div className="card-custom" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ color: '#fff', marginBottom: 16, fontSize: '1.05rem', fontWeight: 700 }}>
+            <h5 style={{ color: 'var(--color-texto)', marginBottom: 16, fontSize: '1.05rem', fontWeight: 700 }}>
               📁 Adquisición Espectral de Imagen
             </h5>
 
@@ -213,7 +213,7 @@ export default function NuevaDeteccion() {
                 }}>
                   🛰️
                 </span>
-                <p style={{ color: '#e2e8f0', margin: '12px 0 0', fontWeight: 600, fontSize: '0.9rem' }}>
+                <p style={{ color: 'var(--color-texto)', margin: '12px 0 0', fontWeight: 600, fontSize: '0.9rem' }}>
                   {isDragging ? '¡Soltar imagen orbital!' : 'Arrastra tu archivo aquí o haz clic para buscar'}
                 </p>
                 <p style={{ color: 'var(--color-texto-muted)', fontSize: '0.78rem', marginTop: 6 }}>
@@ -248,11 +248,11 @@ export default function NuevaDeteccion() {
                       if (inputRef.current) inputRef.current.value = '';
                     }}
                     style={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      background: 'var(--border-glass)',
+                      border: '1px solid var(--border-glass-light)',
                       borderRadius: 8,
                       padding: '6px 12px',
-                      color: '#e2e8f0',
+                      color: 'var(--color-texto)',
                       fontSize: '0.75rem',
                       fontWeight: 600,
                       cursor: 'pointer',
@@ -262,12 +262,12 @@ export default function NuevaDeteccion() {
                       transition: 'all 0.2s'
                     }}
                     onMouseEnter={e => {
-                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                      e.currentTarget.style.background = 'var(--color-card-hover)';
                       e.currentTarget.style.borderColor = 'var(--color-acento)';
                     }}
                     onMouseLeave={e => {
-                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                      e.currentTarget.style.background = 'var(--border-glass)';
+                      e.currentTarget.style.borderColor = 'var(--border-glass-light)';
                     }}
                   >
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -389,7 +389,7 @@ export default function NuevaDeteccion() {
                     className="input-custom"
                     value={zona}
                     onChange={e => setZona(e.target.value)}
-                    style={{ marginBottom: 0, background: 'rgba(9, 18, 33, 0.95)', color: '#fff', outline: 'none' }}
+                    style={{ marginBottom: 0, outline: 'none' }}
                   >
                     <option value="">Selecciona...</option>
                     <option value="Loreto, Perú">Loreto, Perú</option>
@@ -429,7 +429,7 @@ export default function NuevaDeteccion() {
         {/* Columna Derecha: Reporte y Gráficas de Confianza */}
         <div className="col-md-6">
           <div className="card-custom" style={{ minHeight: '400px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ color: '#fff', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
+            <h5 style={{ color: 'var(--color-texto)', marginBottom: 20, fontSize: '1.05rem', fontWeight: 700 }}>
               📊 Lectura de Diagnóstico IA
             </h5>
 
@@ -507,7 +507,7 @@ export default function NuevaDeteccion() {
                   </svg>
                   
                   <div style={{ position: 'absolute', textAlign: 'center' }}>
-                    <span style={{ fontSize: '1.15rem', fontWeight: 800, color: '#fff', display: 'block', fontFamily: 'Outfit, sans-serif', letterSpacing: '-0.02em' }}>
+                    <span style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--color-texto)', display: 'block', fontFamily: 'Outfit, sans-serif', letterSpacing: '-0.02em' }}>
                       {resultado.confianza}%
                     </span>
                     <span style={{ fontSize: '0.6rem', color: 'var(--color-texto-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
@@ -521,9 +521,9 @@ export default function NuevaDeteccion() {
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: 6 }}>
                       <span style={{ color: 'var(--color-peligro)', fontWeight: 600 }}>Probabilidad de Hidrocarburo:</span>
-                      <span style={{ color: '#fff', fontWeight: 700 }}>{resultado.probabilidad_derrame}%</span>
+                      <span style={{ color: 'var(--color-texto)', fontWeight: 700 }}>{resultado.probabilidad_derrame}%</span>
                     </div>
-                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.04)', borderRadius: 99, overflow: 'hidden' }}>
+                    <div style={{ height: '6px', background: 'var(--border-glass)', borderRadius: 99, overflow: 'hidden' }}>
                       <div style={{ height: '100%', width: `${resultado.probabilidad_derrame}%`, background: 'var(--color-peligro)', borderRadius: 99, transition: 'width 1s ease' }} />
                     </div>
                   </div>
@@ -531,9 +531,9 @@ export default function NuevaDeteccion() {
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: 6 }}>
                       <span style={{ color: 'var(--color-primario)', fontWeight: 600 }}>Probabilidad de Zona Limpia:</span>
-                      <span style={{ color: '#fff', fontWeight: 700 }}>{resultado.probabilidad_sin_derrame}%</span>
+                      <span style={{ color: 'var(--color-texto)', fontWeight: 700 }}>{resultado.probabilidad_sin_derrame}%</span>
                     </div>
-                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.04)', borderRadius: 99, overflow: 'hidden' }}>
+                    <div style={{ height: '6px', background: 'var(--border-glass)', borderRadius: 99, overflow: 'hidden' }}>
                       <div style={{ height: '100%', width: `${resultado.probabilidad_sin_derrame}%`, background: 'var(--color-primario)', borderRadius: 99, transition: 'width 1s ease' }} />
                     </div>
                   </div>
@@ -544,19 +544,19 @@ export default function NuevaDeteccion() {
                   display: 'grid', 
                   gridTemplateColumns: '1fr 1fr', 
                   gap: 12, 
-                  background: 'rgba(255, 255, 255, 0.02)', 
+                  background: 'var(--color-card)', 
                   padding: 14, 
                   borderRadius: 12, 
                   fontSize: '0.84rem',
-                  border: '1px solid rgba(255,255,255,0.04)'
+                  border: '1px solid var(--border-glass)'
                 }}>
                   <div>
                     <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.76rem' }}>Zona Registrada</span>
-                    <strong style={{ color: '#fff' }}>{zona || 'No especificada'}</strong>
+                    <strong style={{ color: 'var(--color-texto)' }}>{zona || 'No especificada'}</strong>
                   </div>
                   <div>
                     <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.76rem' }}>Fecha de Registro</span>
-                    <strong style={{ color: '#fff' }}>{fecha || 'No especificada'}</strong>
+                    <strong style={{ color: 'var(--color-texto)' }}>{fecha || 'No especificada'}</strong>
                   </div>
                 </div>
 
@@ -586,7 +586,7 @@ export default function NuevaDeteccion() {
                   }}>
                     📢 Protocolo de Emergencia ({resultado.nivel_alerta})
                   </span>
-                  <p style={{ margin: 0, fontSize: '0.88rem', color: '#f1f5f9', lineHeight: 1.5, fontWeight: 500 }}>
+                  <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--color-texto)', lineHeight: 1.5, fontWeight: 500 }}>
                     {resultado.recomendacion}
                   </p>
                 </div>

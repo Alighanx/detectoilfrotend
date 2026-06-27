@@ -94,9 +94,9 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
         style={{
           maxWidth: '580px',
           width: '100%',
-          background: 'rgba(9, 18, 33, 0.95)',
-          border: '1px solid rgba(6, 182, 212, 0.25)',
-          boxShadow: '0 0 40px rgba(6, 182, 212, 0.15), 0 30px 80px rgba(0, 0, 0, 0.5)',
+          background: 'var(--color-card)',
+          border: '1px solid var(--border-glass)',
+          boxShadow: 'var(--shadow-xl)',
           padding: 0,
           overflow: 'hidden',
           borderRadius: 24,
@@ -111,7 +111,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
           padding: '24px 28px 0'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h4 style={{ margin: 0, color: '#fff', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <h4 style={{ margin: 0, color: 'var(--color-texto)', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ color: 'var(--color-acento)' }}>⚙️</span> Configuración de Cuenta
             </h4>
             <button 
@@ -125,7 +125,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
                 lineHeight: 1,
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={e => e.target.style.color = '#fff'}
+              onMouseEnter={e => e.target.style.color = 'var(--color-texto)'}
               onMouseLeave={e => e.target.style.color = 'var(--color-texto-muted)'}
             >
               &times;
@@ -139,7 +139,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
                 background: 'transparent',
                 border: 'none',
                 borderBottom: activeTab === 'perfil' ? '2.5px solid var(--color-acento)' : '2.5px solid transparent',
-                color: activeTab === 'perfil' ? '#fff' : 'var(--color-texto-muted)',
+                color: activeTab === 'perfil' ? 'var(--color-texto)' : 'var(--color-texto-muted)',
                 fontWeight: 600,
                 padding: '10px 4px',
                 cursor: 'pointer',
@@ -157,7 +157,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
                 background: 'transparent',
                 border: 'none',
                 borderBottom: activeTab === 'ajustes' ? '2.5px solid var(--color-acento)' : '2.5px solid transparent',
-                color: activeTab === 'ajustes' ? '#fff' : 'var(--color-texto-muted)',
+                color: activeTab === 'ajustes' ? 'var(--color-texto)' : 'var(--color-texto-muted)',
                 fontWeight: 600,
                 padding: '10px 4px',
                 cursor: 'pointer',
@@ -233,7 +233,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
               </div>
 
               <div style={{ textAlign: 'center' }}>
-                <h5 style={{ color: '#fff', margin: 0, fontSize: '1.35rem', fontWeight: 700 }}>{nombre}</h5>
+                <h5 style={{ color: 'var(--color-texto)', margin: 0, fontSize: '1.35rem', fontWeight: 700 }}>{nombre}</h5>
                 <span 
                   className={`badge-estado badge-${rol === 'admin' ? 'alto' : 'bajo'}`} 
                   style={{ marginTop: 8, fontSize: '0.68rem', padding: '4px 12px' }}
@@ -254,19 +254,19 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
                   display: 'flex',
                   justifyContent: 'space-between',
                   background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  border: '1px solid var(--border-glass)',
                   padding: '12px 18px',
                   borderRadius: 12
                 }}>
                   <span style={{ color: 'var(--color-texto-muted)', fontSize: '0.84rem' }}>Identificador</span>
-                  <strong style={{ color: '#fff', fontSize: '0.88rem' }}>@{usuario}</strong>
+                  <strong style={{ color: 'var(--color-texto)', fontSize: '0.88rem' }}>@{usuario}</strong>
                 </div>
 
                 <div style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  border: '1px solid var(--border-glass)',
                   padding: '12px 18px',
                   borderRadius: 12
                 }}>
@@ -283,7 +283,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
                   display: 'flex',
                   justifyContent: 'space-between',
                   background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  border: '1px solid var(--border-glass)',
                   padding: '12px 18px',
                   borderRadius: 12
                 }}>
@@ -297,7 +297,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               
               {/* Formulario de Cambio de Contraseña */}
-              <form onSubmit={handleCambiarClave} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.06)', paddingBottom: 24 }}>
+              <form onSubmit={handleCambiarClave} style={{ borderBottom: '1px solid var(--border-glass)', paddingBottom: 24 }}>
                 <h6 style={{ color: 'var(--color-acento)', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 14, fontWeight: 700 }}>
                   🔒 Actualizar Contraseña
                 </h6>
@@ -370,7 +370,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
                       className="input-custom"
                       value={sensor}
                       onChange={e => setSensor(e.target.value)}
-                      style={{ marginBottom: 0, background: 'rgba(9, 18, 33, 0.95)', color: '#fff', border: '1px solid rgba(255,255,255,0.08)', outline: 'none' }}
+                      style={{ marginBottom: 0, outline: 'none' }}
                     >
                       <option value="sentinel2">Sentinel-2 (ESA)</option>
                       <option value="landsat8">Landsat-8 (NASA)</option>
@@ -383,7 +383,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
                       className="input-custom"
                       value={frecuencia}
                       onChange={e => setFrecuencia(e.target.value)}
-                      style={{ marginBottom: 0, background: 'rgba(9, 18, 33, 0.95)', color: '#fff', border: '1px solid rgba(255,255,255,0.08)', outline: 'none' }}
+                      style={{ marginBottom: 0, outline: 'none' }}
                     >
                       <option value="diaria">24 Horas (Diario)</option>
                       <option value="semanal">5 Días (Óptimo Sat.)</option>
@@ -432,7 +432,7 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
         {/* Modal Footer */}
         <div style={{
           background: 'rgba(255,255,255,0.01)',
-          borderTop: '1px solid rgba(255,255,255,0.05)',
+          borderTop: '1px solid var(--border-glass)',
           padding: '18px 28px',
           display: 'flex',
           justifyContent: 'flex-end'
@@ -441,13 +441,13 @@ export default function PerfilAjustesModal({ isOpen, onClose, initialTab = 'perf
             className="btn-principal" 
             onClick={onClose} 
             style={{ 
-              background: 'rgba(255,255,255,0.06)', 
-              color: '#fff', 
+              background: 'var(--border-glass)', 
+              color: 'var(--color-texto)', 
               boxShadow: 'none',
-              border: '1px solid rgba(255,255,255,0.08)'
+              border: '1px solid var(--border-glass)'
             }}
-            onMouseEnter={e => e.target.style.background = 'rgba(255, 255, 255, 0.1)'}
-            onMouseLeave={e => e.target.style.background = 'rgba(255, 255, 255, 0.06)'}
+            onMouseEnter={e => e.target.style.background = 'var(--color-card-hover)'}
+            onMouseLeave={e => e.target.style.background = 'var(--border-glass)'}
           >
             Cerrar Ventana
           </button>

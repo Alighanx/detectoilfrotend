@@ -277,7 +277,7 @@ export default function Historial() {
                         <tr key={d.id}>
                           <td style={{ fontFamily: 'monospace', color: 'var(--color-acento)' }}>#{d.id}</td>
                           <td>{d.fecha}</td>
-                          <td style={{ color: '#fff', fontWeight: 600 }}>{d.lugar}</td>
+                          <td style={{ color: 'var(--color-texto)', fontWeight: 600 }}>{d.lugar}</td>
                           <td>{d.area}</td>
                           <td style={{ fontWeight: 600 }}>{d.confianza}%</td>
                           <td>
@@ -285,7 +285,7 @@ export default function Historial() {
                               {d.nivel}
                             </span>
                           </td>
-                          <td style={{ fontWeight: 600, color: '#e2e8f0' }}>@{d.usuario}</td>
+                          <td style={{ fontWeight: 600, color: 'var(--color-texto)' }}>@{d.usuario}</td>
                           <td style={{ textAlign: 'center', width: '165px', minWidth: '165px' }}>
                             <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center', flexWrap: 'nowrap' }}>
                               <button 
@@ -479,9 +479,9 @@ export default function Historial() {
             width: '100%',
             maxHeight: '90vh',
             overflowY: 'auto',
-            background: 'rgba(9, 18, 33, 0.96)',
-            border: '1px solid rgba(6, 182, 212, 0.25)',
-            boxShadow: '0 0 40px rgba(6, 182, 212, 0.15), 0 30px 70px rgba(0,0,0,0.5)',
+            background: 'var(--color-card)',
+            border: '1px solid var(--border-glass)',
+            boxShadow: 'var(--shadow-xl)',
             padding: 0,
             borderRadius: 20,
             animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both'
@@ -497,7 +497,7 @@ export default function Historial() {
               alignItems: 'center' 
             }}>
               <div>
-                <h3 style={{ margin: 0, color: '#fff', fontSize: '1.25rem' }}>🛰️ Reporte de Diagnóstico Satelital</h3>
+                <h3 style={{ margin: 0, color: 'var(--color-texto)', fontSize: '1.25rem' }}>🛰️ Reporte de Diagnóstico Satelital</h3>
                 <small style={{ color: 'var(--color-acento)', fontWeight: 600, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                   Ficha Oficial de Incidencia #{selectedRecord.id}
                 </small>
@@ -541,37 +541,37 @@ export default function Historial() {
 
               {/* Grid 1: Geographics & Dates */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: 12, borderRadius: 10 }}>
+                <div style={{ background: 'var(--color-card)', border: '1px solid var(--border-glass)', padding: 12, borderRadius: 10 }}>
                   <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 2 }}>Fecha de captura</span>
-                  <strong style={{ color: '#fff', fontSize: '0.9rem' }}>{selectedRecord.fecha}</strong>
+                  <strong style={{ color: 'var(--color-texto)', fontSize: '0.9rem' }}>{selectedRecord.fecha}</strong>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: 12, borderRadius: 10 }}>
+                <div style={{ background: 'var(--color-card)', border: '1px solid var(--border-glass)', padding: 12, borderRadius: 10 }}>
                   <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 2 }}>Zona de Monitoreo</span>
-                  <strong style={{ color: '#fff', fontSize: '0.9rem' }}>{selectedRecord.lugar}</strong>
+                  <strong style={{ color: 'var(--color-texto)', fontSize: '0.9rem' }}>{selectedRecord.lugar}</strong>
                 </div>
               </div>
 
               {/* Grid 2: Area & Confidence */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: 12, borderRadius: 10 }}>
+                <div style={{ background: 'var(--color-card)', border: '1px solid var(--border-glass)', padding: 12, borderRadius: 10 }}>
                   <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 2 }}>Área Estimada</span>
-                  <strong style={{ color: '#fff', fontSize: '0.9rem' }}>{selectedRecord.area || 'N/A (Limpio)'}</strong>
+                  <strong style={{ color: 'var(--color-texto)', fontSize: '0.9rem' }}>{selectedRecord.area || 'N/A (Limpio)'}</strong>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: 12, borderRadius: 10 }}>
+                <div style={{ background: 'var(--color-card)', border: '1px solid var(--border-glass)', padding: 12, borderRadius: 10 }}>
                   <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 2 }}>Fiabilidad de la IA</span>
-                  <strong style={{ color: '#fff', fontSize: '0.9rem' }}>{selectedRecord.confianza}%</strong>
+                  <strong style={{ color: 'var(--color-texto)', fontSize: '0.9rem' }}>{selectedRecord.confianza}%</strong>
                 </div>
               </div>
 
               {/* Grid 3: Probability Breakdown */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: 12, borderRadius: 10 }}>
+                <div style={{ background: 'var(--color-card)', border: '1px solid var(--border-glass)', padding: 12, borderRadius: 10 }}>
                   <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 2 }}>Probabilidad Hidrocarburo</span>
                   <strong style={{ color: 'var(--color-peligro)', fontSize: '0.9rem' }}>
                     {selectedRecord.probabilidad_derrame ? `${selectedRecord.probabilidad_derrame}%` : selectedRecord.nivel === 'alto' ? '92%' : '4%'}
                   </strong>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: 12, borderRadius: 10 }}>
+                <div style={{ background: 'var(--color-card)', border: '1px solid var(--border-glass)', padding: 12, borderRadius: 10 }}>
                   <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 2 }}>Probabilidad Zona Limpia</span>
                   <strong style={{ color: 'var(--color-primario)', fontSize: '0.9rem' }}>
                     {selectedRecord.probabilidad_sin_derrame ? `${selectedRecord.probabilidad_sin_derrame}%` : selectedRecord.nivel === 'bajo' ? '96%' : '8%'}
@@ -589,22 +589,22 @@ export default function Historial() {
                 </div>
                 <div>
                   <span style={{ color: 'var(--color-texto-muted)', display: 'block', fontSize: '0.74rem', marginBottom: 6 }}>Analista Registrador</span>
-                  <strong style={{ color: '#fff', fontSize: '0.94rem', display: 'inline-block', marginTop: 4 }}>@{selectedRecord.usuario}</strong>
+                  <strong style={{ color: 'var(--color-texto)', fontSize: '0.94rem', display: 'inline-block', marginTop: 4 }}>@{selectedRecord.usuario}</strong>
                 </div>
               </div>
 
               {/* Action recommendation */}
               {selectedRecord.recomendacion && (
                 <div style={{ 
-                  background: 'rgba(255, 255, 255, 0.02)', 
+                  background: 'var(--color-card)', 
                   padding: 16, 
                   borderRadius: 12, 
-                  border: '1px dashed rgba(255,255,255,0.08)' 
+                  border: '1px dashed var(--border-glass)' 
                 }}>
                   <span style={{ color: 'var(--color-acento)', display: 'block', fontSize: '0.76rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>
                     📋 Medidas de Mitigación Recomendadas
                   </span>
-                  <p style={{ color: '#e2e8f0', margin: 0, fontSize: '0.86rem', lineHeight: 1.5 }}>
+                  <p style={{ color: 'var(--color-texto)', margin: 0, fontSize: '0.86rem', lineHeight: 1.5 }}>
                     {selectedRecord.recomendacion}
                   </p>
                 </div>
@@ -615,7 +615,7 @@ export default function Historial() {
             {/* Modal Footer */}
             <div style={{ 
               background: 'rgba(255,255,255,0.01)', 
-              borderTop: '1px solid rgba(255,255,255,0.05)', 
+              borderTop: '1px solid var(--border-glass)', 
               padding: '16px 24px', 
               display: 'flex', 
               justifyContent: 'flex-end' 
@@ -624,10 +624,10 @@ export default function Historial() {
                 className="btn-principal" 
                 onClick={() => setSelectedRecord(null)} 
                 style={{ 
-                  background: 'rgba(255,255,255,0.05)', 
-                  color: '#fff', 
+                  background: 'var(--border-glass)', 
+                  color: 'var(--color-texto)', 
                   boxShadow: 'none',
-                  border: '1px solid rgba(255,255,255,0.08)' 
+                  border: '1px solid var(--border-glass)' 
                 }}
               >
                 Cerrar Reporte

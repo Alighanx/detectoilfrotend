@@ -180,45 +180,47 @@ export default function NuevaDeteccion() {
               📁 Adquisición Espectral de Imagen
             </h5>
 
-            {/* Radar Sweep Upload Box */}
-            <div 
-              className="zona-carga" 
-              onClick={() => inputRef.current.click()}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              style={{
-                position: 'relative',
-                border: isDragging ? '2px dashed var(--color-acento)' : '2px dashed rgba(6, 182, 212, 0.25)',
-                background: isDragging ? 'rgba(6, 182, 212, 0.08)' : 'rgba(0, 0, 0, 0.15)',
-                padding: '44px 20px',
-                overflow: 'hidden',
-                borderRadius: 16,
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.3s'
-              }}
-            >
-              {/* Radar sweep scanning line overlay */}
-              <div className="radar-sweep-line" style={{ display: isDragging ? 'block' : 'none' }} />
+            {/* Radar Sweep Upload Box - Solo se muestra si NO hay preview */}
+            {!preview && (
+              <div 
+                className="zona-carga" 
+                onClick={() => inputRef.current.click()}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                style={{
+                  position: 'relative',
+                  border: isDragging ? '2px dashed var(--color-acento)' : '2px dashed rgba(6, 182, 212, 0.25)',
+                  background: isDragging ? 'rgba(6, 182, 212, 0.08)' : 'rgba(0, 0, 0, 0.15)',
+                  padding: '44px 20px',
+                  overflow: 'hidden',
+                  borderRadius: 16,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s'
+                }}
+              >
+                {/* Radar sweep scanning line overlay */}
+                <div className="radar-sweep-line" style={{ display: isDragging ? 'block' : 'none' }} />
 
-              <span className="zona-carga-icon" style={{ 
-                transform: isDragging ? 'scale(1.2)' : 'scale(1)', 
-                transition: 'transform 0.2s', 
-                fontSize: '2.8rem' 
-              }}>
-                🛰️
-              </span>
-              <p style={{ color: '#e2e8f0', margin: '12px 0 0', fontWeight: 600, fontSize: '0.9rem' }}>
-                {isDragging ? '¡Soltar imagen orbital!' : 'Arrastra tu archivo aquí o haz clic para buscar'}
-              </p>
-              <p style={{ color: 'var(--color-texto-muted)', fontSize: '0.78rem', marginTop: 6 }}>
-                Formatos recomendados: JPG, PNG o TIF multiespectral
-              </p>
-            </div>
+                <span className="zona-carga-icon" style={{ 
+                  transform: isDragging ? 'scale(1.2)' : 'scale(1)', 
+                  transition: 'transform 0.2s', 
+                  fontSize: '2.8rem' 
+                }}>
+                  🛰️
+                </span>
+                <p style={{ color: '#e2e8f0', margin: '12px 0 0', fontWeight: 600, fontSize: '0.9rem' }}>
+                  {isDragging ? '¡Soltar imagen orbital!' : 'Arrastra tu archivo aquí o haz clic para buscar'}
+                </p>
+                <p style={{ color: 'var(--color-texto-muted)', fontSize: '0.78rem', marginTop: 6 }}>
+                  Formatos recomendados: JPG, PNG o TIF multiespectral
+                </p>
+              </div>
+            )}
 
             <input
               ref={inputRef}
@@ -228,22 +230,65 @@ export default function NuevaDeteccion() {
               onChange={handleArchivo}
             />
 
+            {/* Vista previa compacta - Solo se muestra si HAY preview */}
             {preview && (
-              <div style={{ marginTop: 20 }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--color-texto-muted)', display: 'block', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Matriz Espectral de Entrada (Vista Previa):
-                </span>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--color-exito)', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
+                    ✓ Imagen cargada - Lista para análisis
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setArchivo(null);
+                      setPreview(null);
+                      setResultado(null);
+                      setProgreso(0);
+                      setError('');
+                      if (inputRef.current) inputRef.current.value = '';
+                    }}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: 8,
+                      padding: '6px 12px',
+                      color: '#e2e8f0',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                      e.currentTarget.style.borderColor = 'var(--color-acento)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                      <circle cx="12" cy="13" r="4" />
+                    </svg>
+                    Cambiar imagen
+                  </button>
+                </div>
                 <div style={{
                   position: 'relative',
                   width: '100%',
-                  height: '180px',
+                  height: '280px',
                   borderRadius: 12,
                   overflow: 'hidden',
                   background: '#040712',
-                  border: '1px solid rgba(255,255,255,0.06)',
+                  border: '2px solid rgba(6, 182, 212, 0.2)',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)'
                 }}>
                   <img
                     src={preview}

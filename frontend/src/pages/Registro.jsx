@@ -149,11 +149,27 @@ export default function Registro() {
           
           {/* Brand details */}
           <div className="login-brand">
-            <div className="login-brand-mark" style={{ background: 'linear-gradient(135deg, var(--color-primario), var(--color-acento))' }}>
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#fff' }}>
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                <circle cx="12" cy="12" r="3" />
+            <div className="login-brand-mark" style={{ background: 'linear-gradient(135deg, var(--color-primario), var(--color-acento))', position: 'relative', overflow: 'hidden' }}>
+              {/* Shield/Protection SVG Icon for Registro */}
+              <svg viewBox="0 0 64 64" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 1 }}>
+                {/* Outer shield shape */}
+                <path d="M32 4L10 12v16c0 14 10 24 22 28 12-4 22-14 22-28V12L32 4z" stroke="white" strokeWidth="2.5" fill="rgba(255,255,255,0.1)"/>
+                {/* Inner shield */}
+                <path d="M32 10L16 16v12c0 10 7 18 16 21 9-3 16-11 16-21V16L32 10z" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.15)"/>
+                {/* Checkmark in center */}
+                <path d="M24 32l6 6 10-10" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                {/* Security dots */}
+                <circle cx="32" cy="24" r="2" fill="white"/>
+                <circle cx="26" cy="38" r="1.5" fill="white" opacity="0.7"/>
+                <circle cx="38" cy="38" r="1.5" fill="white" opacity="0.7"/>
+                {/* Pulse rings */}
+                <circle cx="32" cy="32" r="18" stroke="rgba(255,255,255,0.15)" strokeWidth="1" fill="none">
+                  <animate attributeName="r" values="18;22;18" dur="2s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.15;0.05;0.15" dur="2s" repeatCount="indefinite"/>
+                </circle>
               </svg>
+              {/* Pulse effect */}
+              <div style={{ position: 'absolute', inset: 0, borderRadius: '16px', animation: 'pulseGlow 2s ease-in-out infinite', background: 'radial-gradient(circle, rgba(34,211,238,0.3) 0%, transparent 70%)' }}/>
             </div>
             <div>
               <div className="login-title">Crear Cuenta</div>
